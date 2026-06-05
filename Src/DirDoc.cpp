@@ -58,6 +58,26 @@ int CDirDoc::m_nDirsTemp = 2;
 // display a confirmation message when closing the folder comparison window.
 static constexpr int COMPARISON_TIME_THRESHOLD_SECONDS = 30;
 
+static bool IsExcelWorkbookPath(const String& path)
+{
+	const String ext = strutils::makelower(paths::FindExtension(path));
+	return ext == _T(".xls") || ext == _T(".xlsx") || ext == _T(".xlsm") ||
+		ext == _T(".xlsb") || ext == _T(".xla") || ext == _T(".xlam") ||
+		ext == _T(".xltx") || ext == _T(".xltm");
+}
+
+static bool IsExcelArchiveCompare(int nDirs, const CTempPathContext* pTempPathContext)
+{
+	if (pTempPathContext == nullptr)
+		return false;
+	for (int nIndex = 0; nIndex < nDirs; ++nIndex)
+	{
+		if (!IsExcelWorkbookPath(pTempPathContext->m_strDisplayRoot[nIndex]))
+			return false;
+	}
+	return true;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // CDirDoc
 
@@ -189,6 +209,9 @@ void CDirDoc::InitCompare(const PathContext & paths, bool bRecursive, CTempPathC
 	m_pCtxt.reset(new CDiffContext(paths,
 			GetOptionsMgr()->GetInt(OPT_CMP_METHOD)));
 	m_pCtxt->m_bRecursive = bRecursive;
+	// Excel sheets are shown as a virtual folder, so display both side names
+	// even when they match to make it clear that each row represents both workbooks.
+	m_pCtxt->m_bShowBothFilenames = IsExcelArchiveCompare(m_nDirs, pTempPathContext);
 
 	if (pTempPathContext != nullptr)
 	{

@@ -220,9 +220,24 @@ static Type ColFileNameGet(const CDiffContext * pCtxt, const void *p, int) //sfi
 	{
 		if (index == -1)
 			index = 0;
-		return pDiffFileInfo[index].filename;
+		if (!pCtxt->m_bShowBothFilenames)
+			return pDiffFileInfo[index].filename;
 	}
-	else
+
+	if (pCtxt->m_bShowBothFilenames)
+	{
+		String none = _("<None>");
+		String filenames;
+		for (int i = 0; i < nDirs; ++i)
+		{
+			if (i > 0)
+				filenames += _T(" | ");
+			filenames += bExist[i] ? pDiffFileInfo[i].filename.get() : none;
+		}
+		return static_cast<Type>(filenames);
+	}
+
+	if (!bIsSameName)
 	{
 		if (nDirs < 3)
 			return static_cast<Type>(pDiffFileInfo[0].filename.get() + _T("|") + pDiffFileInfo[1].filename.get());
@@ -234,6 +249,8 @@ static Type ColFileNameGet(const CDiffContext * pCtxt, const void *p, int) //sfi
 				+ (bExist[2] ? pDiffFileInfo[2].filename.get() : none));
 		}
 	}
+
+	return pDiffFileInfo[index].filename;
 }
 
 /**

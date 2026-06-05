@@ -664,6 +664,8 @@ String PackingInfo::GetUnpackedFileExtension(int target, const String& filteredF
 					preferredWindowType = 3;
 				else if (preferredWindowTypeStr == L"Webpage")
 					preferredWindowType = 4;
+				else if (preferredWindowTypeStr == L"Folder" || preferredWindowTypeStr == L"Archive")
+					preferredWindowType = 5;
 			}
 		}
 	}

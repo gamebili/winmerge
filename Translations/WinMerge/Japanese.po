@@ -9483,7 +9483,7 @@ msgid "Update external references (links)"
 msgstr "比較時、外部参照(リンク)を更新する"
 
 #. IDS_PLUGIN_COMPAREMSPOWERPOINTFILES_STR3
-#: Strings.rc:216 Strings.rc:239 Strings.rc:256
+#: Strings.rc:216 Strings.rc:240 Strings.rc:257
 msgid "Compare document properties"
 msgstr "ドキュメントプロパティを比較する"
 
@@ -9517,7 +9517,7 @@ msgid "Compare formulas"
 msgstr "数式を比較する"
 
 #. IDS_PLUGIN_COMPAREMSVISIOFILES_STR4
-#: Strings.rc:224 Strings.rc:244 Strings.rc:263 Strings.rc:276
+#: Strings.rc:224 Strings.rc:245 Strings.rc:264 Strings.rc:277
 msgid "Compare texts in shapes"
 msgstr "図形内のテキストを比較する"
 
@@ -9526,7 +9526,7 @@ msgstr "図形内のテキストを比較する"
 msgid "Compare headers and footers"
 msgstr "ヘッダーとフッターを比較する"
 
-#: Strings.rc:227 Strings.rc:247 Strings.rc:267 Strings.rc:279
+#: Strings.rc:227 Strings.rc:248 Strings.rc:268 Strings.rc:280
 msgid ""
 "Cannot get Macros.\r\n"
 "Enable 'Trust access to Visual Basic Project' in MS Office Macro Security."
@@ -9546,104 +9546,109 @@ msgid "Include sheet order number in filename"
 msgstr "ファイル名にシート番号を含める"
 
 #. IDS_PLUGIN_COMPAREMSVISIOFILES_STR5
-#: Strings.rc:234 Strings.rc:245 Strings.rc:265 Strings.rc:277
+#: Strings.rc:234 Strings.rc:246 Strings.rc:266 Strings.rc:278
 msgid "Compare VBA macros"
 msgstr "VBA マクロを比較する"
 
-#: Strings.rc:236
+#. IDS_PLUGIN_COMPAREMSEXCELFILES_STR17
+#: Strings.rc:235
+msgid "Match worksheets by name"
+msgstr ""
+
+#: Strings.rc:237
 msgid "CompareMSWordFiles.sct WinMerge Plugin Options"
 msgstr "CompareMSWordFiles.sct WinMerge プラグインオプション"
 
-#: Strings.rc:238
+#: Strings.rc:239
 msgid "Extract document data to multiple files"
 msgstr "ドキュメントの情報を複数ファイルに展開する"
 
 #. IDS_PLUGIN_COMPAREMSWORDFILES_STR4
-#: Strings.rc:240
+#: Strings.rc:241
 msgid "Compare bookmarks"
 msgstr "ブックマークの定義を比較する"
 
 #. IDS_PLUGIN_COMPAREMSWORDFILES_STR5
-#: Strings.rc:241
+#: Strings.rc:242
 msgid "Compare text contents of documents"
 msgstr "ドキュメント内のテキスト部を比較する"
 
-#: Strings.rc:243
+#: Strings.rc:244
 msgid "Compare documents as HTML file (very slow)"
 msgstr "ドキュメントをHTMLファイル化して比較する (処理時間増大)"
 
-#: Strings.rc:253
+#: Strings.rc:254
 msgid "CompareMSPowerPointFiles.sct WinMerge Plugin Options"
 msgstr "CompareMSPowerPointFiles.sct WinMerge プラグインオプション"
 
-#: Strings.rc:255
+#: Strings.rc:256
 msgid "Extract slide data to multiple files"
 msgstr "スライドの情報を複数ファイルに展開する"
 
-#: Strings.rc:258
+#: Strings.rc:259
 msgid "Compare slides as image (very slow)"
 msgstr "スライドを画像化して比較する (処理時間増大)"
 
 #. IDS_PLUGIN_COMPAREMSPOWERPOINTFILES_STR6
-#: Strings.rc:264
+#: Strings.rc:265
 msgid "Compare texts in notes page"
 msgstr "ノート内のテキストを比較する"
 
-#: Strings.rc:273
+#: Strings.rc:274
 msgid "CompareMSVisioFiles.sct WinMerge Plugin Options"
 msgstr "CompareMSVisioFiles.sct WinMerge プラグインオプション"
 
 #. IDS_PLUGIN_COMPAREMSVISIOFILES_STR2
-#: Strings.rc:274
+#: Strings.rc:275
 msgid "Extract page data to multiple files"
 msgstr "ページの情報を複数ファイルに展開する"
 
 #. IDS_PLUGIN_COMPAREMSVISIOFILES_STR3
-#: Strings.rc:275
+#: Strings.rc:276
 msgid "Compare pages as image (very slow)"
 msgstr "ページを画像化して比較する (処理時間増大)"
 
-#: Strings.rc:285
+#: Strings.rc:286
 msgid "PrediffLineFilter.sct WinMerge Plugin Options"
 msgstr "PrediffLineFilter.sct WinMerge プラグインオプション"
 
 #. IDS_PLUGIN_PREDIFFLINEFILTER_STR3
-#: Strings.rc:287
+#: Strings.rc:288
 msgid "Delete"
 msgstr "削除"
 
 #. IDS_PLUGIN_PREDIFFLINEFILTER_STR4
-#: Strings.rc:288
+#: Strings.rc:289
 msgid "Enabled"
 msgstr "有効"
 
 #. IDS_PLUGIN_PREDIFFLINEFILTER_STR5
-#: Strings.rc:289
+#: Strings.rc:290
 msgid "Ignore Case"
 msgstr "大文字小文字の違いを無視"
 
 #. IDS_PLUGIN_PREDIFFLINEFILTER_STR6
-#: Strings.rc:290
+#: Strings.rc:291
 msgid "Use RegExp"
 msgstr "正規表現を使用"
 
 #. IDS_PLUGIN_PREDIFFLINEFILTER_STR7
-#: Strings.rc:291
+#: Strings.rc:292
 msgid "Find what"
 msgstr "検索文字列"
 
 #. IDS_PLUGIN_PREDIFFLINEFILTER_STR8
-#: Strings.rc:292
+#: Strings.rc:293
 msgid "Replace with"
 msgstr "置換後の文字列"
 
 #. IDS_PLUGIN_IGNORE_STR1
-#: Strings.rc:297
+#: Strings.rc:298
 msgid "Settings"
 msgstr "設定"
 
 #. IDS_PLUGIN_IGNORE_STR2
-#: Strings.rc:298
+#: Strings.rc:299
 msgid ""
 "Column Ranges to Ignore:\n"
 "e.g.) 3,10-20,32-33\n"
@@ -9651,7 +9656,7 @@ msgstr ""
 "無視する列番号\n"
 "例)  3,10-20,32-33\n"
 
-#: Strings.rc:304
+#: Strings.rc:305
 #, c-format
 msgid "Enter filename for patch '%1'"
 msgstr ""
@@ -9659,16 +9664,16 @@ msgstr ""
 "(※ 指定したファイルを一時フォルダにコピーし、一時フォルダ側のファイルにパッチを適用します)"
 
 #. IDS_PLUGIN_APPLYPATCH_STR2
-#: Strings.rc:305
+#: Strings.rc:306
 #, c-format
 msgid "File '%1' does not exist"
 msgstr "ファイル '%1' は存在しません"
 
-#: Strings.rc:307
+#: Strings.rc:308
 msgid "Enter command line arguments for patch"
 msgstr "patch コマンドへ渡す引数を指定してください"
 
-#: Strings.rc:309
+#: Strings.rc:310
 #, c-format
 msgid "Enter folder name for patch '%1'"
 msgstr ""
@@ -9676,24 +9681,24 @@ msgstr ""
 "(※ 指定したフォルダ内のファイルを一時フォルダにコピーし、一時フォルダ側のファイルにパッチを適用します)"
 
 #. IDS_PLUGIN_APPLYPATCH_STR5
-#: Strings.rc:314
+#: Strings.rc:315
 #, c-format
 msgid "Folder '%1' does not exist"
 msgstr "フォルダー'%1' は存在しません"
 
-#: Strings.rc:316
+#: Strings.rc:317
 msgid "Do not use '-p0' for patch files with absolute paths"
 msgstr "絶対パスが含まれているパッチファイルに '-p0' オプションが指定されました。このまま実行するとパッチが一時ファイルではなく、元ファイルに適用されてしまう可能性があるため、中止します。"
 
-#: Strings.rc:322
+#: Strings.rc:323
 msgid "AI.sct WinMerge Plugin Options"
 msgstr "AI.sct WinMerge プラグイン オプション"
 
-#: Strings.rc:324
+#: Strings.rc:325
 msgid "Enter prompt"
 msgstr "プロンプトを入力してください"
 
-#: Strings.rc:326
+#: Strings.rc:327
 #, c-format
 msgid ""
 "Enter OpenAI API key.\r\n"
@@ -9704,26 +9709,26 @@ msgstr ""
 " ※ このプラグインを利用するには、OpenAIへの登録が必要であり、料金がかかります。\r\n"
 " ※ API キーは環境変数 %1 に保存されます。"
 
-#: Strings.rc:328
+#: Strings.rc:329
 msgid "Environment variable name for OpenAI API key"
 msgstr "OpenAI API キーを格納する環境変数名"
 
-#: Strings.rc:330
+#: Strings.rc:331
 msgid "OpenAI API key"
 msgstr "OpenAI API キー"
 
-#: Strings.rc:332
+#: Strings.rc:333
 msgid "Temperature"
 msgstr "Temperature"
 
-#: Strings.rc:334
+#: Strings.rc:335
 msgid "Maximum length"
 msgstr "Maximum length"
 
-#: Strings.rc:336
+#: Strings.rc:337
 msgid "Model"
 msgstr "モデル"
 
-#: Strings.rc:338
+#: Strings.rc:339
 msgid "OpenAI API key changed. Restart to apply."
 msgstr "OpenAI APIキーが変更されました。 変更を適用するには、WinMerge を再起動してください。"

@@ -207,6 +207,8 @@ public:
 	bool m_bIgnoreCodepage;
 	bool m_bEnableImageCompare;
 	double m_dColorDistanceThreshold;
+	/** Show every side's filename in the unified name column for virtual sheet lists. */
+	bool m_bShowBothFilenames;
 
 	bool m_bRecursive; /**< Do we include subfolders to compare? */
 	bool m_bPluginsEnabled; /**< Are plugins enabled? */

@@ -6,6 +6,13 @@
 It compares files and folders and presents differences in a clear, visual format that is easy to understand and work with.  
 WinMerge has been actively developed since 2000.
 
+## About This Fork
+
+This fork keeps WinMerge's upstream behavior while improving MS Excel comparison for game/data-table workflows.
+Excel workbooks are handled by a new calamine-based fast sheet extractor, so `.xls`, `.xlsx`, `.xlsm`, `.xlsb`, `.xla`, `.xlam`, `.xlt`, `.xltx`, and `.xltm` files open as workbook-folder comparisons by default.
+Each worksheet is extracted to a UTF-8 TSV file, making sheet selection natural in WinMerge's folder view and avoiding the very slow Excel COM startup path for normal comparisons.
+The original Excel COM plugin remains available as a manual fallback.
+
 [![Build status](https://ci.appveyor.com/api/projects/status/h3v3ap1kswi1tyyt?svg=true)](https://ci.appveyor.com/project/sdottaka/winmerge/build/artifacts)
 [![CI](https://github.com/WinMerge/winmerge/workflows/CI/badge.svg)](https://github.com/WinMerge/winmerge/actions)
 [![sourceforge.net downloads](https://img.shields.io/sourceforge/dt/winmerge)](https://sourceforge.net/projects/winmerge/files/)

@@ -9428,7 +9428,7 @@ msgid "Update external references (links)"
 msgstr "Оновити зовнішні посилання"
 
 #. IDS_PLUGIN_COMPAREMSPOWERPOINTFILES_STR3
-#: Strings.rc:216 Strings.rc:239 Strings.rc:256
+#: Strings.rc:216 Strings.rc:240 Strings.rc:257
 msgid "Compare document properties"
 msgstr "Порівняти властивості документа"
 
@@ -9462,7 +9462,7 @@ msgid "Compare formulas"
 msgstr "Порівняти формули"
 
 #. IDS_PLUGIN_COMPAREMSVISIOFILES_STR4
-#: Strings.rc:224 Strings.rc:244 Strings.rc:263 Strings.rc:276
+#: Strings.rc:224 Strings.rc:245 Strings.rc:264 Strings.rc:277
 msgid "Compare texts in shapes"
 msgstr "Порівняти текст у фігурах"
 
@@ -9471,7 +9471,7 @@ msgstr "Порівняти текст у фігурах"
 msgid "Compare headers and footers"
 msgstr "Порівняти верхні та нижні колонтитули"
 
-#: Strings.rc:227 Strings.rc:247 Strings.rc:267 Strings.rc:279
+#: Strings.rc:227 Strings.rc:248 Strings.rc:268 Strings.rc:280
 msgid ""
 "Cannot get Macros.\r\n"
 "Enable 'Trust access to Visual Basic Project' in MS Office Macro Security."
@@ -9490,104 +9490,109 @@ msgid "Include sheet order number in filename"
 msgstr ""
 
 #. IDS_PLUGIN_COMPAREMSVISIOFILES_STR5
-#: Strings.rc:234 Strings.rc:245 Strings.rc:265 Strings.rc:277
+#: Strings.rc:234 Strings.rc:246 Strings.rc:266 Strings.rc:278
 msgid "Compare VBA macros"
 msgstr "Порівняти макроси VBA"
 
-#: Strings.rc:236
+#. IDS_PLUGIN_COMPAREMSEXCELFILES_STR17
+#: Strings.rc:235
+msgid "Match worksheets by name"
+msgstr ""
+
+#: Strings.rc:237
 msgid "CompareMSWordFiles.sct WinMerge Plugin Options"
 msgstr "Параметри WinMerge плагіна CompareMSWordFiles.sct"
 
-#: Strings.rc:238
+#: Strings.rc:239
 msgid "Extract document data to multiple files"
 msgstr "Витягти дані документа в кілька файлів"
 
 #. IDS_PLUGIN_COMPAREMSWORDFILES_STR4
-#: Strings.rc:240
+#: Strings.rc:241
 msgid "Compare bookmarks"
 msgstr "Порівняти закладки"
 
 #. IDS_PLUGIN_COMPAREMSWORDFILES_STR5
-#: Strings.rc:241
+#: Strings.rc:242
 msgid "Compare text contents of documents"
 msgstr "Порівняти текстовий вміст документів"
 
-#: Strings.rc:243
+#: Strings.rc:244
 msgid "Compare documents as HTML file (very slow)"
 msgstr "Порівняти документи як HTML (дуже повільно)"
 
-#: Strings.rc:253
+#: Strings.rc:254
 msgid "CompareMSPowerPointFiles.sct WinMerge Plugin Options"
 msgstr "Параметри WinMerge плагіна CompareMSPowerPointFiles.sct"
 
-#: Strings.rc:255
+#: Strings.rc:256
 msgid "Extract slide data to multiple files"
 msgstr "Витягти дані слайдів у кілька файлів"
 
-#: Strings.rc:258
+#: Strings.rc:259
 msgid "Compare slides as image (very slow)"
 msgstr "Порівняти слайди як зображення (дуже повільно)"
 
 #. IDS_PLUGIN_COMPAREMSPOWERPOINTFILES_STR6
-#: Strings.rc:264
+#: Strings.rc:265
 msgid "Compare texts in notes page"
 msgstr "Порівняти тексти на сторінці нотаток"
 
-#: Strings.rc:273
+#: Strings.rc:274
 msgid "CompareMSVisioFiles.sct WinMerge Plugin Options"
 msgstr "Параметри WinMerge плагіна CompareMSVisioFiles.sct"
 
 #. IDS_PLUGIN_COMPAREMSVISIOFILES_STR2
-#: Strings.rc:274
+#: Strings.rc:275
 msgid "Extract page data to multiple files"
 msgstr "Витягти дані сторінок у кілька файлів"
 
 #. IDS_PLUGIN_COMPAREMSVISIOFILES_STR3
-#: Strings.rc:275
+#: Strings.rc:276
 msgid "Compare pages as image (very slow)"
 msgstr "Порівняти сторінки як зображення (дуже повільно)"
 
-#: Strings.rc:285
+#: Strings.rc:286
 msgid "PrediffLineFilter.sct WinMerge Plugin Options"
 msgstr "Параметри WinMerge плагіна PrediffLineFilter.sct"
 
 #. IDS_PLUGIN_PREDIFFLINEFILTER_STR3
-#: Strings.rc:287
+#: Strings.rc:288
 msgid "Delete"
 msgstr "Вилучити"
 
 #. IDS_PLUGIN_PREDIFFLINEFILTER_STR4
-#: Strings.rc:288
+#: Strings.rc:289
 msgid "Enabled"
 msgstr "Увімкнено"
 
 #. IDS_PLUGIN_PREDIFFLINEFILTER_STR5
-#: Strings.rc:289
+#: Strings.rc:290
 msgid "Ignore Case"
 msgstr "Ігнорувати регістр"
 
 #. IDS_PLUGIN_PREDIFFLINEFILTER_STR6
-#: Strings.rc:290
+#: Strings.rc:291
 msgid "Use RegExp"
 msgstr "Використовувати Регулярні вирази"
 
 #. IDS_PLUGIN_PREDIFFLINEFILTER_STR7
-#: Strings.rc:291
+#: Strings.rc:292
 msgid "Find what"
 msgstr "Знайти"
 
 #. IDS_PLUGIN_PREDIFFLINEFILTER_STR8
-#: Strings.rc:292
+#: Strings.rc:293
 msgid "Replace with"
 msgstr "Замінити на"
 
 #. IDS_PLUGIN_IGNORE_STR1
-#: Strings.rc:297
+#: Strings.rc:298
 msgid "Settings"
 msgstr "Налаштування"
 
 #. IDS_PLUGIN_IGNORE_STR2
-#: Strings.rc:298
+#: Strings.rc:299
 msgid ""
 "Column Ranges to Ignore:\n"
 "e.g.) 3,10-20,32-33\n"
@@ -9595,45 +9600,45 @@ msgstr ""
 "Діапазони стовпців для ігнорування:\n"
 "напр.) 3,10-20,32-33\n"
 
-#: Strings.rc:304
+#: Strings.rc:305
 #, c-format
 msgid "Enter filename for patch '%1'"
 msgstr "Введіть ім'я файлу для патча '%1'"
 
 #. IDS_PLUGIN_APPLYPATCH_STR2
-#: Strings.rc:305
+#: Strings.rc:306
 #, c-format
 msgid "File '%1' does not exist"
 msgstr "Файл '%1' не існує"
 
-#: Strings.rc:307
+#: Strings.rc:308
 msgid "Enter command line arguments for patch"
 msgstr "Введіть аргументи командного рядка для патча"
 
-#: Strings.rc:309
+#: Strings.rc:310
 #, c-format
 msgid "Enter folder name for patch '%1'"
 msgstr "Введіть ім'я папки для патча '%1'"
 
 #. IDS_PLUGIN_APPLYPATCH_STR5
-#: Strings.rc:314
+#: Strings.rc:315
 #, c-format
 msgid "Folder '%1' does not exist"
 msgstr "Папка '%1' не існує"
 
-#: Strings.rc:316
+#: Strings.rc:317
 msgid "Do not use '-p0' for patch files with absolute paths"
 msgstr "Не використовуйте '-p0' для патч-файлів з абсолютними шляхами"
 
-#: Strings.rc:322
+#: Strings.rc:323
 msgid "AI.sct WinMerge Plugin Options"
 msgstr "Параметри WinMerge плагіна AI.sct"
 
-#: Strings.rc:324
+#: Strings.rc:325
 msgid "Enter prompt"
 msgstr "Введіть підказку (prompt)"
 
-#: Strings.rc:326
+#: Strings.rc:327
 #, c-format
 msgid ""
 "Enter OpenAI API key.\r\n"
@@ -9644,26 +9649,26 @@ msgstr ""
 "- Потрібна реєстрація в OpenAI (можливі збори).\r\n"
 "- Ключ зберігається в змінній оточення %1."
 
-#: Strings.rc:328
+#: Strings.rc:329
 msgid "Environment variable name for OpenAI API key"
 msgstr "Ім'я змінної оточення для ключа OpenAI API"
 
-#: Strings.rc:330
+#: Strings.rc:331
 msgid "OpenAI API key"
 msgstr "Ключ OpenAI API"
 
-#: Strings.rc:332
+#: Strings.rc:333
 msgid "Temperature"
 msgstr "Температура"
 
-#: Strings.rc:334
+#: Strings.rc:335
 msgid "Maximum length"
 msgstr "Максимальна довжина"
 
-#: Strings.rc:336
+#: Strings.rc:337
 msgid "Model"
 msgstr "Модель"
 
-#: Strings.rc:338
+#: Strings.rc:339
 msgid "OpenAI API key changed. Restart to apply."
 msgstr "Ключ OpenAI API змінено. Перезапустіть програму для застосування."

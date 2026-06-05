@@ -825,6 +825,30 @@ static int DetectWindowTypeFromURL(const String& url)
 		return -1;
 }
 
+static bool IsExcelWorkbookPath(const String& path)
+{
+	if (path.empty() || paths::IsURLorCLSID(path) || paths::IsNullDeviceName(path))
+		return false;
+	const String ext = strutils::makelower(paths::FindExtension(path));
+	return ext == _T(".xls") || ext == _T(".xlsx") || ext == _T(".xlsm") ||
+		ext == _T(".xlsb") || ext == _T(".xla") || ext == _T(".xlam") ||
+		ext == _T(".xltx") || ext == _T(".xltm");
+}
+
+static bool ShouldPreferExcelUnpacker(const PathContext& paths, UINT nID, const PackingInfo* infoUnpacker)
+{
+	if (static_cast<int>(nID) > 0 || !GetOptionsMgr()->GetBool(OPT_PLUGINS_ENABLED))
+		return false;
+	if (infoUnpacker && !infoUnpacker->GetPluginPipeline().empty())
+		return false;
+	if (paths.GetSize() < 1)
+		return false;
+
+	// Excel workbooks are binary containers, so without a targeted automatic
+	// unpacker they fall through to the hex view when global auto-unpack is off.
+	return std::all_of(paths.begin(), paths.end(), IsExcelWorkbookPath);
+}
+
 bool CMainFrame::ShowAutoMergeDoc(UINT nID, IDirDoc * pDirDoc,
 	int nFiles, const FileLocation ifileloc[],
 	const fileopenflags_t dwFlags[], const String strDesc[], const String& sReportFile /*= _T("")*/,
@@ -1585,11 +1609,16 @@ bool CMainFrame::DoFileOrFolderOpen(const PathContext * pFiles /*= nullptr*/,
 	FileTransform::AutoUnpacking = GetOptionsMgr()->GetBool(OPT_PLUGINS_UNPACKER_MODE);
 	FileTransform::AutoPrediffing = GetOptionsMgr()->GetBool(OPT_PLUGINS_PREDIFFER_MODE);
 
-	Merge7zFormatMergePluginScope scope(infoUnpacker);
-
 	PathContext tFiles;
 	if (pFiles != nullptr)
 		tFiles = *pFiles;
+
+	PackingInfo excelUnpacker(_T("<Automatic>"));
+	if (ShouldPreferExcelUnpacker(tFiles, nID, infoUnpacker))
+		infoUnpacker = &excelUnpacker;
+
+	Merge7zFormatMergePluginScope scope(infoUnpacker);
+
 	bool bRO[3] = {0};
 	if (dwFlags)
 	{
@@ -1731,6 +1760,10 @@ bool CMainFrame::DoFileOpen(UINT nID, const PathContext* pFiles,
 	const OpenParams *pOpenParams /*= nullptr*/)
 {
 	ASSERT(pFiles != nullptr);
+	PackingInfo excelUnpacker(_T("<Automatic>"));
+	if (ShouldPreferExcelUnpacker(*pFiles, nID, infoUnpacker))
+		infoUnpacker = &excelUnpacker;
+
 	FileLocation fileloc[3];
 	for (int pane = 0; pane < pFiles->GetSize(); pane++)
 		fileloc[pane].setPath((*pFiles)[pane]);

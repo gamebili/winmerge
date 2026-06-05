@@ -191,7 +191,7 @@ date /t &gt; MergeLang.lastbuild
 attrib -a English.pot
 del English.pot.prev English.pot.flt English.pot.prev.flt 2&gt; NUL
 move English.pot English.pot.prev 2&gt; NUL
-cscript CreateMasterPotFile.js
+cscript //E:jscript CreateMasterPotFile.js
 attrib -a English.pot
 findstr /v POT-Creation-Date English.pot &gt; English.pot.flt
 findstr /v POT-Creation-Date English.pot.prev &gt; English.pot.prev.flt
@@ -314,7 +314,7 @@ date /t &gt; MergeLang.lastbuild
 attrib -a English.pot
 del English.pot.prev English.pot.flt English.pot.prev.flt 2&gt; NUL
 move English.pot English.pot.prev 2&gt; NUL
-cscript CreateMasterPotFile.js
+cscript //E:jscript CreateMasterPotFile.js
 attrib -a English.pot
 findstr /v POT-Creation-Date English.pot &gt; English.pot.flt
 findstr /v POT-Creation-Date English.pot.prev &gt; English.pot.prev.flt

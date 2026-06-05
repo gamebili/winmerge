@@ -10192,7 +10192,7 @@ msgid "Update external references (links)"
 msgstr "외부 참조 (링크) 업데이트"
 
 #. IDS_PLUGIN_COMPAREMSPOWERPOINTFILES_STR3
-#: Strings.rc:216 Strings.rc:239 Strings.rc:256
+#: Strings.rc:216 Strings.rc:240 Strings.rc:257
 msgid "Compare document properties"
 msgstr "문서 속성 비교"
 
@@ -10226,7 +10226,7 @@ msgid "Compare formulas"
 msgstr "공식 비교"
 
 #. IDS_PLUGIN_COMPAREMSVISIOFILES_STR4
-#: Strings.rc:224 Strings.rc:244 Strings.rc:263 Strings.rc:276
+#: Strings.rc:224 Strings.rc:245 Strings.rc:264 Strings.rc:277
 msgid "Compare texts in shapes"
 msgstr "도형의 텍스트 비교"
 
@@ -10235,7 +10235,7 @@ msgstr "도형의 텍스트 비교"
 msgid "Compare headers and footers"
 msgstr "머리글과 바닥글 비교"
 
-#: Strings.rc:227 Strings.rc:247 Strings.rc:267 Strings.rc:279
+#: Strings.rc:227 Strings.rc:248 Strings.rc:268 Strings.rc:280
 msgid ""
 "Cannot get Macros.\r\n"
 "Enable 'Trust access to Visual Basic Project' in MS Office Macro Security."
@@ -10254,104 +10254,109 @@ msgid "Include sheet order number in filename"
 msgstr "파일 이름에 시트 주문 번호 포함"
 
 #. IDS_PLUGIN_COMPAREMSVISIOFILES_STR5
-#: Strings.rc:234 Strings.rc:245 Strings.rc:265 Strings.rc:277
+#: Strings.rc:234 Strings.rc:246 Strings.rc:266 Strings.rc:278
 msgid "Compare VBA macros"
 msgstr "VBA 매크로 비교"
 
-#: Strings.rc:236
+#. IDS_PLUGIN_COMPAREMSEXCELFILES_STR17
+#: Strings.rc:235
+msgid "Match worksheets by name"
+msgstr ""
+
+#: Strings.rc:237
 msgid "CompareMSWordFiles.sct WinMerge Plugin Options"
 msgstr "CompareMSWordFiles.sct WinMerge 플러그인 옵션"
 
-#: Strings.rc:238
+#: Strings.rc:239
 msgid "Extract document data to multiple files"
 msgstr "문서 데이터를 여러 파일로 추출"
 
 #. IDS_PLUGIN_COMPAREMSWORDFILES_STR4
-#: Strings.rc:240
+#: Strings.rc:241
 msgid "Compare bookmarks"
 msgstr "북마크 비교"
 
 #. IDS_PLUGIN_COMPAREMSWORDFILES_STR5
-#: Strings.rc:241
+#: Strings.rc:242
 msgid "Compare text contents of documents"
 msgstr "문서의 텍스트 내용 비교"
 
-#: Strings.rc:243
+#: Strings.rc:244
 msgid "Compare documents as HTML file (very slow)"
 msgstr "문서를 HTML 파일로 비교 (매우 느림)"
 
-#: Strings.rc:253
+#: Strings.rc:254
 msgid "CompareMSPowerPointFiles.sct WinMerge Plugin Options"
 msgstr "CompareMSPowerPointFiles.sct WinMerge 플러그인 옵션"
 
-#: Strings.rc:255
+#: Strings.rc:256
 msgid "Extract slide data to multiple files"
 msgstr "슬라이드 데이터를 여러 파일로 추출"
 
-#: Strings.rc:258
+#: Strings.rc:259
 msgid "Compare slides as image (very slow)"
 msgstr "슬라이드를 이미지로 비교 (매우 느림)"
 
 #. IDS_PLUGIN_COMPAREMSPOWERPOINTFILES_STR6
-#: Strings.rc:264
+#: Strings.rc:265
 msgid "Compare texts in notes page"
 msgstr "참조 페이지의 텍스트 비교"
 
-#: Strings.rc:273
+#: Strings.rc:274
 msgid "CompareMSVisioFiles.sct WinMerge Plugin Options"
 msgstr "MSVisioFiles.sct WinMerge 플러그인 옵션 비교"
 
 #. IDS_PLUGIN_COMPAREMSVISIOFILES_STR2
-#: Strings.rc:274
+#: Strings.rc:275
 msgid "Extract page data to multiple files"
 msgstr "페이지 데이터를 여러 파일로 추출"
 
 #. IDS_PLUGIN_COMPAREMSVISIOFILES_STR3
-#: Strings.rc:275
+#: Strings.rc:276
 msgid "Compare pages as image (very slow)"
 msgstr "페이지를 이미지로 비교 (매우 느림)"
 
-#: Strings.rc:285
+#: Strings.rc:286
 msgid "PrediffLineFilter.sct WinMerge Plugin Options"
 msgstr "PrediffLineFilter.sct WinMerge 플러그인 옵션"
 
 #. IDS_PLUGIN_PREDIFFLINEFILTER_STR3
-#: Strings.rc:287
+#: Strings.rc:288
 msgid "Delete"
 msgstr "삭제"
 
 #. IDS_PLUGIN_PREDIFFLINEFILTER_STR4
-#: Strings.rc:288
+#: Strings.rc:289
 msgid "Enabled"
 msgstr "사용함"
 
 #. IDS_PLUGIN_PREDIFFLINEFILTER_STR5
-#: Strings.rc:289
+#: Strings.rc:290
 msgid "Ignore Case"
 msgstr "대소문자 무시"
 
 #. IDS_PLUGIN_PREDIFFLINEFILTER_STR6
-#: Strings.rc:290
+#: Strings.rc:291
 msgid "Use RegExp"
 msgstr "정규식 사용"
 
 #. IDS_PLUGIN_PREDIFFLINEFILTER_STR7
-#: Strings.rc:291
+#: Strings.rc:292
 msgid "Find what"
 msgstr "찾을 내용"
 
 #. IDS_PLUGIN_PREDIFFLINEFILTER_STR8
-#: Strings.rc:292
+#: Strings.rc:293
 msgid "Replace with"
 msgstr "바꿀 대상"
 
 #. IDS_PLUGIN_IGNORE_STR1
-#: Strings.rc:297
+#: Strings.rc:298
 msgid "Settings"
 msgstr "설정"
 
 #. IDS_PLUGIN_IGNORE_STR2
-#: Strings.rc:298
+#: Strings.rc:299
 msgid ""
 "Column Ranges to Ignore:\n"
 "e.g.) 3,10-20,32-33\n"
@@ -10359,45 +10364,45 @@ msgstr ""
 "무시할 열 범위:\n"
 "예:)  3,10-20,32-33\n"
 
-#: Strings.rc:304
+#: Strings.rc:305
 #, c-format
 msgid "Enter filename for patch '%1'"
 msgstr "'%1' 패치가 적용될 파일의 이름을 입력하세요"
 
 #. IDS_PLUGIN_APPLYPATCH_STR2
-#: Strings.rc:305
+#: Strings.rc:306
 #, c-format
 msgid "File '%1' does not exist"
 msgstr "파일 '%1'이(가) 존재하지 않습니다"
 
-#: Strings.rc:307
+#: Strings.rc:308
 msgid "Enter command line arguments for patch"
 msgstr "패치 명령에 대한 명령줄 인수 입력하세요"
 
-#: Strings.rc:309
+#: Strings.rc:310
 #, c-format
 msgid "Enter folder name for patch '%1'"
 msgstr "'%1' 패치가 적용될 폴더의 이름 입력하세요"
 
 #. IDS_PLUGIN_APPLYPATCH_STR5
-#: Strings.rc:314
+#: Strings.rc:315
 #, c-format
 msgid "Folder '%1' does not exist"
 msgstr "'%1' 폴더가 없습니다"
 
-#: Strings.rc:316
+#: Strings.rc:317
 msgid "Do not use '-p0' for patch files with absolute paths"
 msgstr "절대 경로가 있는 패치 파일에는 '-p0'을 사용하지 마세요"
 
-#: Strings.rc:322
+#: Strings.rc:323
 msgid "AI.sct WinMerge Plugin Options"
 msgstr "AI.sct WinMerge 플러그인 옵션"
 
-#: Strings.rc:324
+#: Strings.rc:325
 msgid "Enter prompt"
 msgstr "프롬프트 입력"
 
-#: Strings.rc:326
+#: Strings.rc:327
 #, c-format
 msgid ""
 "Enter OpenAI API key.\r\n"
@@ -10408,26 +10413,26 @@ msgstr ""
 " - OpenAI 등록이 필요합니다 (수수료가 부과될 수 있습니다).\r\n"
 " - API 키는 환경 변수 %1에 저장됩니다."
 
-#: Strings.rc:328
+#: Strings.rc:329
 msgid "Environment variable name for OpenAI API key"
 msgstr "OpenAI API 키의 환경 변수 이름"
 
-#: Strings.rc:330
+#: Strings.rc:331
 msgid "OpenAI API key"
 msgstr "OpenAI API 키"
 
-#: Strings.rc:332
+#: Strings.rc:333
 msgid "Temperature"
 msgstr "온도"
 
-#: Strings.rc:334
+#: Strings.rc:335
 msgid "Maximum length"
 msgstr "최대 길이"
 
-#: Strings.rc:336
+#: Strings.rc:337
 msgid "Model"
 msgstr "모델"
 
-#: Strings.rc:338
+#: Strings.rc:339
 msgid "OpenAI API key changed. Restart to apply."
 msgstr "OpenAI API 키가 변경되었습니다. 적용하려면 다시 시작하세요."

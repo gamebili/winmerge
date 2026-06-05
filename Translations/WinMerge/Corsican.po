@@ -9465,7 +9465,7 @@ msgid "Update external references (links)"
 msgstr "Rinnovà e referenze esterne (liami)"
 
 #. IDS_PLUGIN_COMPAREMSPOWERPOINTFILES_STR3
-#: Strings.rc:216 Strings.rc:239 Strings.rc:256
+#: Strings.rc:216 Strings.rc:240 Strings.rc:257
 msgid "Compare document properties"
 msgstr "Paragunà i pruprietà di u ducumentu"
 
@@ -9499,7 +9499,7 @@ msgid "Compare formulas"
 msgstr "Paragunà e formule"
 
 #. IDS_PLUGIN_COMPAREMSVISIOFILES_STR4
-#: Strings.rc:224 Strings.rc:244 Strings.rc:263 Strings.rc:276
+#: Strings.rc:224 Strings.rc:245 Strings.rc:264 Strings.rc:277
 msgid "Compare texts in shapes"
 msgstr "Paragunà i testi in e forme"
 
@@ -9508,7 +9508,7 @@ msgstr "Paragunà i testi in e forme"
 msgid "Compare headers and footers"
 msgstr "Paragunà intestature è bassi di pagina"
 
-#: Strings.rc:227 Strings.rc:247 Strings.rc:267 Strings.rc:279
+#: Strings.rc:227 Strings.rc:248 Strings.rc:268 Strings.rc:280
 msgid ""
 "Cannot get Macros.\r\n"
 "Enable 'Trust access to Visual Basic Project' in MS Office Macro Security."
@@ -9527,104 +9527,109 @@ msgid "Include sheet order number in filename"
 msgstr "Include u numeru d’ordine di u fogliu in u nome di schedariu"
 
 #. IDS_PLUGIN_COMPAREMSVISIOFILES_STR5
-#: Strings.rc:234 Strings.rc:245 Strings.rc:265 Strings.rc:277
+#: Strings.rc:234 Strings.rc:246 Strings.rc:266 Strings.rc:278
 msgid "Compare VBA macros"
 msgstr "Paragunà e prucedure VBA"
 
-#: Strings.rc:236
+#. IDS_PLUGIN_COMPAREMSEXCELFILES_STR17
+#: Strings.rc:235
+msgid "Match worksheets by name"
+msgstr ""
+
+#: Strings.rc:237
 msgid "CompareMSWordFiles.sct WinMerge Plugin Options"
 msgstr "Ozzioni di u modulu d’estensione CompareMSWordFiles.sct di WinMerge"
 
-#: Strings.rc:238
+#: Strings.rc:239
 msgid "Extract document data to multiple files"
 msgstr "Estrae i dati di u ducumentu ver di parechji schedarii"
 
 #. IDS_PLUGIN_COMPAREMSWORDFILES_STR4
-#: Strings.rc:240
+#: Strings.rc:241
 msgid "Compare bookmarks"
 msgstr "Paragunà l’indette"
 
 #. IDS_PLUGIN_COMPAREMSWORDFILES_STR5
-#: Strings.rc:241
+#: Strings.rc:242
 msgid "Compare text contents of documents"
 msgstr "Paragunà i cuntenuti testuali di i ducumenti"
 
-#: Strings.rc:243
+#: Strings.rc:244
 msgid "Compare documents as HTML file (very slow)"
 msgstr "Paragunà i ducumenti tale HTML (pianu pianu)"
 
-#: Strings.rc:253
+#: Strings.rc:254
 msgid "CompareMSPowerPointFiles.sct WinMerge Plugin Options"
 msgstr "Ozzioni di u modulu d’estensione CompareMSPowerPointFiles.sct di WinMerge"
 
-#: Strings.rc:255
+#: Strings.rc:256
 msgid "Extract slide data to multiple files"
 msgstr "Estrae i dati di e diapusitive ver di parechji schedarii"
 
-#: Strings.rc:258
+#: Strings.rc:259
 msgid "Compare slides as image (very slow)"
 msgstr "Paragunà e diapusitive tale fiure (pianu pianu)"
 
 #. IDS_PLUGIN_COMPAREMSPOWERPOINTFILES_STR6
-#: Strings.rc:264
+#: Strings.rc:265
 msgid "Compare texts in notes page"
 msgstr "Paragunà i testi in e pagine di note"
 
-#: Strings.rc:273
+#: Strings.rc:274
 msgid "CompareMSVisioFiles.sct WinMerge Plugin Options"
 msgstr "Ozzioni di u modulu d’estensione CompareMSVisioFiles.sct di WinMerge"
 
 #. IDS_PLUGIN_COMPAREMSVISIOFILES_STR2
-#: Strings.rc:274
+#: Strings.rc:275
 msgid "Extract page data to multiple files"
 msgstr "Estrae i dati di e pagine ver di parechji schedarii"
 
 #. IDS_PLUGIN_COMPAREMSVISIOFILES_STR3
-#: Strings.rc:275
+#: Strings.rc:276
 msgid "Compare pages as image (very slow)"
 msgstr "Paragunà e pagine tale fiure (pianu pianu)"
 
-#: Strings.rc:285
+#: Strings.rc:286
 msgid "PrediffLineFilter.sct WinMerge Plugin Options"
 msgstr "Ozzioni di u modulu d’estensione PrediffLineFilter.sct di WinMerge"
 
 #. IDS_PLUGIN_PREDIFFLINEFILTER_STR3
-#: Strings.rc:287
+#: Strings.rc:288
 msgid "Delete"
 msgstr "Squassà"
 
 #. IDS_PLUGIN_PREDIFFLINEFILTER_STR4
-#: Strings.rc:288
+#: Strings.rc:289
 msgid "Enabled"
 msgstr "Attivatu"
 
 #. IDS_PLUGIN_PREDIFFLINEFILTER_STR5
-#: Strings.rc:289
+#: Strings.rc:290
 msgid "Ignore Case"
 msgstr "Ignurà a cassa"
 
 #. IDS_PLUGIN_PREDIFFLINEFILTER_STR6
-#: Strings.rc:290
+#: Strings.rc:291
 msgid "Use RegExp"
 msgstr "Impiegà RegExp"
 
 #. IDS_PLUGIN_PREDIFFLINEFILTER_STR7
-#: Strings.rc:291
+#: Strings.rc:292
 msgid "Find what"
 msgstr "Cosa circà"
 
 #. IDS_PLUGIN_PREDIFFLINEFILTER_STR8
-#: Strings.rc:292
+#: Strings.rc:293
 msgid "Replace with"
 msgstr "Rimpiazzà cù"
 
 #. IDS_PLUGIN_IGNORE_STR1
-#: Strings.rc:297
+#: Strings.rc:298
 msgid "Settings"
 msgstr "Parametri"
 
 #. IDS_PLUGIN_IGNORE_STR2
-#: Strings.rc:298
+#: Strings.rc:299
 msgid ""
 "Column Ranges to Ignore:\n"
 "e.g.) 3,10-20,32-33\n"
@@ -9632,45 +9637,45 @@ msgstr ""
 "Intervalli di culonne à ignurà :\n"
 "p.i.)  3,10-20,32-33\n"
 
-#: Strings.rc:304
+#: Strings.rc:305
 #, c-format
 msgid "Enter filename for patch '%1'"
 msgstr "Stampittà u nome di u schedariu per u currettivu « %1 »"
 
 #. IDS_PLUGIN_APPLYPATCH_STR2
-#: Strings.rc:305
+#: Strings.rc:306
 #, c-format
 msgid "File '%1' does not exist"
 msgstr "U schedariu « %1 » ùn esiste micca"
 
-#: Strings.rc:307
+#: Strings.rc:308
 msgid "Enter command line arguments for patch"
 msgstr "Stampittà l’argumenti di linea di cumanda per u currettivu"
 
-#: Strings.rc:309
+#: Strings.rc:310
 #, c-format
 msgid "Enter folder name for patch '%1'"
 msgstr "Stampittà u nome di u cartulare per u currettivu « %1 »"
 
 #. IDS_PLUGIN_APPLYPATCH_STR5
-#: Strings.rc:314
+#: Strings.rc:315
 #, c-format
 msgid "Folder '%1' does not exist"
 msgstr "U cartulare « %1 » ùn esiste micca"
 
-#: Strings.rc:316
+#: Strings.rc:317
 msgid "Do not use '-p0' for patch files with absolute paths"
 msgstr "Ùn impiegate micca « -p0 » per schedarii di currezzione cù chjassi assuluti"
 
-#: Strings.rc:322
+#: Strings.rc:323
 msgid "AI.sct WinMerge Plugin Options"
 msgstr "Ozzioni di u modulu d’estensione AI.sct di WinMerge"
 
-#: Strings.rc:324
+#: Strings.rc:325
 msgid "Enter prompt"
 msgstr "Stampittate in modu d’invitu"
 
-#: Strings.rc:326
+#: Strings.rc:327
 #, c-format
 msgid ""
 "Enter OpenAI API key.\r\n"
@@ -9681,26 +9686,26 @@ msgstr ""
 "- Richiede un’inscrizzione à OpenAI (pò ingenerà certi costi).\r\n"
 "- Chjave d’API piazzata in a variabile d’ambiente %1."
 
-#: Strings.rc:328
+#: Strings.rc:329
 msgid "Environment variable name for OpenAI API key"
 msgstr "Nome di a variabile d’ambiente per a chjave d’API per OpenAI"
 
-#: Strings.rc:330
+#: Strings.rc:331
 msgid "OpenAI API key"
 msgstr "Chjave d’API per OpenAI"
 
-#: Strings.rc:332
+#: Strings.rc:333
 msgid "Temperature"
 msgstr "Timperatura"
 
-#: Strings.rc:334
+#: Strings.rc:335
 msgid "Maximum length"
 msgstr "Lunghezza massima"
 
-#: Strings.rc:336
+#: Strings.rc:337
 msgid "Model"
 msgstr "Mudellu"
 
-#: Strings.rc:338
+#: Strings.rc:339
 msgid "OpenAI API key changed. Restart to apply."
 msgstr "A chjave d’API per OpenAI hà cambiatu. Rilancià per appiecà i cambiamenti."

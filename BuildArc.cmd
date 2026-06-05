@@ -184,6 +184,9 @@ rem Commands
 echo Copy Commands...
 xcopy /s/y Plugins\Commands "%DISTDIR%\%PLATFORMH%zip-version\WinMerge\Commands"
 copy Plugins\Commands\DownloadFiles.bat "%DISTDIR%\%PLATFORMH%zip-version\WinMerge\Commands"
+rd /s /q "%DISTDIR%\%PLATFORMH%zip-version\WinMerge\Commands\excel2tsv\src" 2> NUL
+del "%DISTDIR%\%PLATFORMH%zip-version\WinMerge\Commands\excel2tsv\Cargo.*" 2> NUL
+del "%DISTDIR%\%PLATFORMH%zip-version\WinMerge\Commands\excel2tsv\.gitignore" 2> NUL
 
 rem Patch
 echo Copy Patch...
@@ -208,6 +211,10 @@ rem Copy md4c...
 echo Copy md4c...
 copy Build\md4c\mingw32\bin\*.* "%DISTDIR%\%PLATFORMH%zip-version\WinMerge\Commands\md4c\" > NUL
 copy Build\md4c\mingw32\share\licenses\md4c\LICENSE.md "%DISTDIR%\%PLATFORMH%zip-version\WinMerge\Commands\md4c\" > NUL
+
+rem Copy excel2tsv...
+echo Copy excel2tsv...
+copy Build\%PLATFORM%\Release\Commands\excel2tsv\excel2tsv.exe "%DISTDIR%\%PLATFORMH%zip-version\WinMerge\Commands\excel2tsv\excel2tsv.exe" > NUL
 
 rem Plugin.xml
 copy Plugins\Plugins.xml "%DISTDIR%\%PLATFORMH%zip-version\WinMerge\MergePlugins\" > NUL

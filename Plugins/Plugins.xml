@@ -34,6 +34,20 @@
       <command>"${WINMERGE_HOME}\Commands\cliphcat\cliphcat.exe" "${SRC_FILE}" -o "${DST_FILE}" ${*}</command>
     </unpack-file>
   </plugin>
+  <plugin name="CompareExcelSheetsFast">
+    <event value="FILE_FOLDER_PACK_UNPACK" />
+    <description value="Fast MS Excel sheet extractor (calamine).&#xD;&#xA;Extracts each worksheet to a UTF-8 TSV file without starting Excel." />
+    <file-filters value="\.xls$;\.xlsx$;\.xlsm$;\.xlsb$;\.xla$;\.xlam$;\.xlt$;\.xltx$;\.xltm$" />
+    <is-automatic value="true" />
+    <unpacked-file-extension value=".tsv" />
+    <extended-properties value="ProcessType=Content Extraction;FileType=MS-Excel;MenuCaption=Fast MS-Excel Sheets;PreferredWindowType=Folder" />
+    <is-folder>
+      <command>"${WINMERGE_HOME}\Commands\excel2tsv\excel2tsv.exe" --is-folder "${SRC_FILE}"</command>
+    </is-folder>
+    <unpack-folder>
+      <command>"${WINMERGE_HOME}\Commands\excel2tsv\excel2tsv.exe" unpack-folder "${SRC_FILE}" "${DST_FOLDER}"</command>
+    </unpack-folder>
+  </plugin>
   <plugin name="PrettifyHTML">
     <event value="FILE_PACK_UNPACK" />
     <description value="HTML Prettier (tidy-html5).&#xD;&#xA;Arguments: tidy command line options." />

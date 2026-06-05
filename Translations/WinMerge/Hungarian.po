@@ -9846,7 +9846,7 @@ msgid "Update external references (links)"
 msgstr "Külső hivatkozások (linkek) frissítése"
 
 #. IDS_PLUGIN_COMPAREMSPOWERPOINTFILES_STR3
-#: Strings.rc:216 Strings.rc:239 Strings.rc:256
+#: Strings.rc:216 Strings.rc:240 Strings.rc:257
 msgid "Compare document properties"
 msgstr "Dokumentum tulajdonságok összehasonlítása"
 
@@ -9880,7 +9880,7 @@ msgid "Compare formulas"
 msgstr "Képletek összehasonlítása"
 
 #. IDS_PLUGIN_COMPAREMSVISIOFILES_STR4
-#: Strings.rc:224 Strings.rc:244 Strings.rc:263 Strings.rc:276
+#: Strings.rc:224 Strings.rc:245 Strings.rc:264 Strings.rc:277
 msgid "Compare texts in shapes"
 msgstr "Szövegek alakzatban történő összehasonlítása"
 
@@ -9889,7 +9889,7 @@ msgstr "Szövegek alakzatban történő összehasonlítása"
 msgid "Compare headers and footers"
 msgstr "Fejlécek és láblécek összehasonlítása"
 
-#: Strings.rc:227 Strings.rc:247 Strings.rc:267 Strings.rc:279
+#: Strings.rc:227 Strings.rc:248 Strings.rc:268 Strings.rc:280
 msgid "Cannot get Macros.\r\nEnable 'Trust access to Visual Basic Project' in MS Office Macro Security."
 msgstr "Nem lehet makrókat elérni.\r\n    Ahhoz, hogy a WinMerge összehasonlíthassa a makrókat, az MS Office segítségével módosítsd a Macro biztonsági beállításait az aktuális alkalmazáshoz.\r\n   A Visual Basic Project megbízható hozzáférése funkciót be kell kapcsolni ehhez a WinMerge funkcióhoz.\r\n"
 
@@ -9904,170 +9904,175 @@ msgid "Include sheet order number in filename"
 msgstr "A fájlnévben szerepeljen a lap sorszáma"
 
 #. IDS_PLUGIN_COMPAREMSVISIOFILES_STR5
-#: Strings.rc:234 Strings.rc:245 Strings.rc:265 Strings.rc:277
+#: Strings.rc:234 Strings.rc:246 Strings.rc:266 Strings.rc:278
 msgid "Compare VBA macros"
 msgstr "VBA makrók összehasonlítása"
 
-#: Strings.rc:236
+#. IDS_PLUGIN_COMPAREMSEXCELFILES_STR17
+#: Strings.rc:235
+msgid "Match worksheets by name"
+msgstr ""
+
+#: Strings.rc:237
 msgid "CompareMSWordFiles.sct WinMerge Plugin Options"
 msgstr "CompareMSWordFiles.sct WinMerge beépülő opciói"
 
-#: Strings.rc:238
+#: Strings.rc:239
 msgid "Extract document data to multiple files"
 msgstr "Dokumentum adatainak kibontása több fájlba"
 
 #. IDS_PLUGIN_COMPAREMSWORDFILES_STR4
-#: Strings.rc:240
+#: Strings.rc:241
 msgid "Compare bookmarks"
 msgstr "Könyvjelzők összehasonlítása"
 
 #. IDS_PLUGIN_COMPAREMSWORDFILES_STR5
-#: Strings.rc:241
+#: Strings.rc:242
 msgid "Compare text contents of documents"
 msgstr "Dokumentumok szöveges tartalmának összehasonlítása"
 
-#: Strings.rc:243
+#: Strings.rc:244
 msgid "Compare documents as HTML file (very slow)"
 msgstr "Dokumentumok összehasonlítása HTML fájlként"
 
-#: Strings.rc:253
+#: Strings.rc:254
 msgid "CompareMSPowerPointFiles.sct WinMerge Plugin Options"
 msgstr "CompareMSPowerPointFiles.sct WinMerge beépülő opciói"
 
-#: Strings.rc:255
+#: Strings.rc:256
 msgid "Extract slide data to multiple files"
 msgstr "Dia adatainak kibontása több fájlba"
 
-#: Strings.rc:258
+#: Strings.rc:259
 msgid "Compare slides as image (very slow)"
 msgstr "Diák összehasonlítása képként (nagyon lassú)"
 
 #. IDS_PLUGIN_COMPAREMSPOWERPOINTFILES_STR6
-#: Strings.rc:264
+#: Strings.rc:265
 msgid "Compare texts in notes page"
 msgstr "Jegyzetoldalon található szövegek összehasonlítása"
 
-#: Strings.rc:273
+#: Strings.rc:274
 msgid "CompareMSVisioFiles.sct WinMerge Plugin Options"
 msgstr "CompareMSVisioFiles.sct WinMerge beépülő opciói"
 
 #. IDS_PLUGIN_COMPAREMSVISIOFILES_STR2
-#: Strings.rc:274
+#: Strings.rc:275
 msgid "Extract page data to multiple files"
 msgstr "Oldal adatok kibontása több fájlba"
 
 #. IDS_PLUGIN_COMPAREMSVISIOFILES_STR3
-#: Strings.rc:275
+#: Strings.rc:276
 msgid "Compare pages as image (very slow)"
 msgstr "Oldalak összehasonlítása képként (nagyon lassú)"
 
-#: Strings.rc:285
+#: Strings.rc:286
 msgid "PrediffLineFilter.sct WinMerge Plugin Options"
 msgstr "PrediffLineFilter.sct WinMerge beépülő opciói"
 
 #. IDS_PLUGIN_PREDIFFLINEFILTER_STR3
-#: Strings.rc:287
+#: Strings.rc:288
 msgid "Delete"
 msgstr "Törlés"
 
 #. IDS_PLUGIN_PREDIFFLINEFILTER_STR4
-#: Strings.rc:288
+#: Strings.rc:289
 msgid "Enabled"
 msgstr "Engedélyezve"
 
 #. IDS_PLUGIN_PREDIFFLINEFILTER_STR5
-#: Strings.rc:289
+#: Strings.rc:290
 msgid "Ignore Case"
 msgstr "Nagybetű nem számít"
 
 #. IDS_PLUGIN_PREDIFFLINEFILTER_STR6
-#: Strings.rc:290
+#: Strings.rc:291
 msgid "Use RegExp"
 msgstr "RegExp használata"
 
 #. IDS_PLUGIN_PREDIFFLINEFILTER_STR7
-#: Strings.rc:291
+#: Strings.rc:292
 msgid "Find what"
 msgstr "Keresés erre"
 
 #. IDS_PLUGIN_PREDIFFLINEFILTER_STR8
-#: Strings.rc:292
+#: Strings.rc:293
 msgid "Replace with"
 msgstr "Csere ezzel"
 
 #. IDS_PLUGIN_IGNORE_STR1
-#: Strings.rc:297
+#: Strings.rc:298
 msgid "Settings"
 msgstr "Beállítások"
 
 #. IDS_PLUGIN_IGNORE_STR2
-#: Strings.rc:298
+#: Strings.rc:299
 msgid "Column Ranges to Ignore:\ne.g.) 3,10-20,32-33\n"
 msgstr "Mellőzendő oszloptartományok:\npl.) 3,10-20,32-33\n"
 
-#: Strings.rc:304
+#: Strings.rc:305
 #, c-format
 msgid "Enter filename for patch '%1'"
 msgstr "Add meg annak a fájlnak a nevét, amelyre a(z) '%1' patch alkalmazásra kerüljön"
 
 #. IDS_PLUGIN_APPLYPATCH_STR2
-#: Strings.rc:305
+#: Strings.rc:306
 #, c-format
 msgid "File '%1' does not exist"
 msgstr "A(z) '%1' fájl nem létezik"
 
-#: Strings.rc:307
+#: Strings.rc:308
 msgid "Enter command line arguments for patch"
 msgstr "Add meg a patch parancs parancssori argumentumait"
 
-#: Strings.rc:309
+#: Strings.rc:310
 #, c-format
 msgid "Enter folder name for patch '%1'"
 msgstr "Add meg annak a mappának a nevét, amelyre a(z) '%1' patch alkalmazásra kerüljön"
 
 #. IDS_PLUGIN_APPLYPATCH_STR5
-#: Strings.rc:314
+#: Strings.rc:315
 #, c-format
 msgid "Folder '%1' does not exist"
 msgstr "A(z) '%1' mappa nem létezik"
 
-#: Strings.rc:316
+#: Strings.rc:317
 msgid "Do not use '-p0' for patch files with absolute paths"
 msgstr "Ne add meg a '-p0' parancssori paramétert az abszolút elérési utakat tartalmazó patchfájlhoz"
 
-#: Strings.rc:322
+#: Strings.rc:323
 msgid "AI.sct WinMerge Plugin Options"
 msgstr "AI.sct szerkesztő WinMerge bővítmény opciók"
 
-#: Strings.rc:324
+#: Strings.rc:325
 msgid "Enter prompt"
 msgstr "Írd be a promptot"
 
-#: Strings.rc:326
+#: Strings.rc:327
 #, c-format
 msgid "Enter OpenAI API key.\r\n- Requires OpenAI registration (fees may apply).\r\n- Key stored in env var %1."
 msgstr "Adja meg az OpenAI API-kulcsát.\r\n - A bővítmény használata regisztrációt igényel az OpenAI-nál, és díjköteles.\r\n - Az API-kulcs a(z) %1 környezeti változóban van tárolva."
 
-#: Strings.rc:328
+#: Strings.rc:329
 msgid "Environment variable name for OpenAI API key"
 msgstr "Az OpenAI API kulcs környezeti változójának neve"
 
-#: Strings.rc:330
+#: Strings.rc:331
 msgid "OpenAI API key"
 msgstr "OpenAI API kulcs"
 
-#: Strings.rc:332
+#: Strings.rc:333
 msgid "Temperature"
 msgstr "Hőmérséklet"
 
-#: Strings.rc:334
+#: Strings.rc:335
 msgid "Maximum length"
 msgstr "Maximális hossz"
 
-#: Strings.rc:336
+#: Strings.rc:337
 msgid "Model"
 msgstr "Modell"
 
-#: Strings.rc:338
+#: Strings.rc:339
 msgid "OpenAI API key changed. Restart to apply."
 msgstr "Az OpenAI API kulcs megváltozott. Kérjük, indítsd újra a WinMerge-t a változások alkalmazásához."

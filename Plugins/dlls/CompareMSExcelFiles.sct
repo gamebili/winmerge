@@ -51,6 +51,7 @@
 
 
 var REGKEY_PATH = "Plugins\\CompareMSExcelFiles.sct/";
+var FAST_SHEET_COMPARE_DEFAULTS_VERSION = 1;
 var MsgCannotGetMacros = "${Cannot get Macros.\r\n" + 
   "Enable 'Trust access to Visual Basic Project' in MS Office Macro Security.}";
 var pbGroup = 6;
@@ -71,8 +72,47 @@ function regRead(Key, DefaultValue) {
   return mergeApp.GetOption(Key, DefaultValue);
 }
 
+function toDwordValue(Value) {
+  if (typeof Value === "boolean") {
+    return Value ? 1 : 0;
+  }
+  if (typeof Value === "string") {
+    var lower = Value.toLowerCase();
+    if (lower === "true") {
+      return 1;
+    }
+    if (lower === "false") {
+      return 0;
+    }
+  }
+  return parseInt(Value, 10);
+}
+
 function regWrite(Key, Value, TypeNm) {
-  mergeApp.SaveOption(Key, (TypeNm === "REG_DWORD") ? parseInt(Value, 10) : String(Value));
+  mergeApp.SaveOption(Key, (TypeNm === "REG_DWORD") ? toDwordValue(Value) : String(Value));
+}
+
+function applyFastSheetCompareDefaultsOnce() {
+  var versionKey = REGKEY_PATH + "FastSheetCompareDefaultsVersion";
+  if (regRead(versionKey, 0) >= FAST_SHEET_COMPARE_DEFAULTS_VERSION) {
+    return;
+  }
+
+  // Default Excel comparison should be responsive and sheet-focused. Users can
+  // re-enable metadata/macros from the plugin options after this one-time reset.
+  regWrite(REGKEY_PATH + "UnpackToFolder", true, "REG_DWORD");
+  regWrite(REGKEY_PATH + "IncludeSheetOrderNumber", false, "REG_DWORD");
+  regWrite(REGKEY_PATH + "MatchWorksheetsByName", true, "REG_DWORD");
+  regWrite(REGKEY_PATH + "CompareDocumentProperties", false, "REG_DWORD");
+  regWrite(REGKEY_PATH + "CompareNames", false, "REG_DWORD");
+  regWrite(REGKEY_PATH + "CompareCellValues", true, "REG_DWORD");
+  regWrite(REGKEY_PATH + "CompareWorksheetsAsImage", false, "REG_DWORD");
+  regWrite(REGKEY_PATH + "CompareWorksheetsAsHTML", false, "REG_DWORD");
+  regWrite(REGKEY_PATH + "CompareFormulas", false, "REG_DWORD");
+  regWrite(REGKEY_PATH + "CompareTextsInShapes", false, "REG_DWORD");
+  regWrite(REGKEY_PATH + "CompareHeadersAndFooters", false, "REG_DWORD");
+  regWrite(REGKEY_PATH + "CompareVBAMacros", false, "REG_DWORD");
+  regWrite(versionKey, FAST_SHEET_COMPARE_DEFAULTS_VERSION, "REG_DWORD");
 }
 
 function toString(val) {
@@ -449,11 +489,13 @@ function get_PluginDescription() {
 }
 
 function get_PluginFileFilters() {
-  return "\\.xls(\\..*)?$;\\.xlsx(\\..*)?$;\\.xlsm(\\..*)?$;\\.xlsb(\\..*)?;\\.xla(\\..*)?$;\\.xlax(\\..*)?$;\\.xltx(\\..*)?$;\\.xltm(\\..*)?$";
+  return "\\.xls(\\..*)?$;\\.xlsx(\\..*)?$;\\.xlsm(\\..*)?$;\\.xlsb(\\..*)?;\\.xla(\\..*)?$;\\.xlam(\\..*)?$;\\.xltx(\\..*)?$;\\.xltm(\\..*)?$";
 }
 
 function get_PluginIsAutomatic() {
-  return true;
+  // The calamine-based command plugin is now the default Excel handler.
+  // Keep this Excel COM implementation available for manual fallback only.
+  return false;
 }
 
 function get_PluginUnpackedFileExtension() {
@@ -461,11 +503,12 @@ function get_PluginUnpackedFileExtension() {
 }
 
 function get_PluginExtendedProperties() {
-  return "ProcessType=Content Extraction;FileType=MS-Excel;MenuCaption=MS-Excel";
+  return "ProcessType=Content Extraction;FileType=MS-Excel;MenuCaption=MS-Excel;PreferredWindowType=Folder";
 }
 
 function PluginOnEvent(eventType, obj) {
   mergeApp = obj;
+  applyFastSheetCompareDefaultsOnce();
 }
 
 function UnpackFile(fileSrc, fileDst, pbChanged, pSubcode) {
@@ -494,7 +537,7 @@ function UnpackFile(fileSrc, fileDst, pbChanged, pSubcode) {
     fo.WriteLine("");
   }
  
-  if (regRead(REGKEY_PATH + "CompareNames", true)) {
+  if (regRead(REGKEY_PATH + "CompareNames", false)) {
     fo.WriteLine("[Names]");
     writeObjectProperties(fo, wbk.Names);
     fo.WriteLine("");
@@ -512,20 +555,20 @@ function UnpackFile(fileSrc, fileDst, pbChanged, pSubcode) {
       writeFormulas(fo, sht);
       fo.WriteLine("");
     }
-    if (regRead(REGKEY_PATH + "CompareTextsInShapes", true)) {
+    if (regRead(REGKEY_PATH + "CompareTextsInShapes", false)) {
       fo.WriteLine("[" + sht.Name + ".Shapes]");
       ungroupShapes(sht);
       writeTextsInShapes(fo, sht);
       fo.WriteLine("");
     }
-    if (regRead(REGKEY_PATH + "CompareHeadersAndFooters", true)) {
+    if (regRead(REGKEY_PATH + "CompareHeadersAndFooters", false)) {
       fo.WriteLine("[" + sht.Name + ".HeadersAndFooters]");
       writeHeadersAndFooters(fo, sht);
       fo.WriteLine("");
     }
   }
  
-  if (regRead(REGKEY_PATH + "CompareVBAMacros", true)) {
+  if (regRead(REGKEY_PATH + "CompareVBAMacros", false)) {
     if (!isAccessibleVBAProject(wbk)) {
       fo.WriteLine(translate(MsgCannotGetMacros));
     } else {
@@ -566,7 +609,10 @@ function PackFile(fileSrc, fileDst, pbChanged, pSubcode) {
 }
 
 function IsFolder(file) {
-  return regRead(REGKEY_PATH + "UnpackToFolder", false);
+  // Matching worksheets by name requires per-sheet files (folder mode) so the
+  // directory comparison can pair same-named sheets across the two workbooks.
+  return regRead(REGKEY_PATH + "UnpackToFolder", true) ||
+         regRead(REGKEY_PATH + "MatchWorksheetsByName", true);
 }
 
 function UnpackFolder(fileSrc, folderDst, pbChanged, pSubcode) {
@@ -597,7 +643,11 @@ function UnpackFolder(fileSrc, folderDst, pbChanged, pSubcode) {
   if (digit <= 0) { digit = 1; }
   var zf = Array(digit + 1).join("0");
 
-  var includeSheetOrderNumber = regRead(REGKEY_PATH + "IncludeSheetOrderNumber", true);
+  // When matching worksheets by name, file names must be the bare sheet name (no
+  // order-number prefix) so that same-named sheets in the two workbooks pair up
+  // in the folder comparison.
+  var matchWorksheetsByName = regRead(REGKEY_PATH + "MatchWorksheetsByName", true);
+  var includeSheetOrderNumber = !matchWorksheetsByName && regRead(REGKEY_PATH + "IncludeSheetOrderNumber", false);
   var prefixForGlobal = includeSheetOrderNumber ? "(" + zf + ")" : "";
 
   if (regRead(REGKEY_PATH + "CompareDocumentProperties", false)) {
@@ -607,7 +657,7 @@ function UnpackFolder(fileSrc, folderDst, pbChanged, pSubcode) {
     fo = null;
   }
 
-  if (regRead(REGKEY_PATH + "CompareNames", true)) {
+  if (regRead(REGKEY_PATH + "CompareNames", false)) {
     var fo = fso.CreateTextFile(fso.BuildPath(folderDst, prefixForGlobal + "Names.txt"), true, true);
     writeObjectProperties(fo, wbk.Names);
     fo.Close();
@@ -634,7 +684,7 @@ function UnpackFolder(fileSrc, folderDst, pbChanged, pSubcode) {
       fo = null;
     }
  
-    if (regRead(REGKEY_PATH + "CompareTextsInShapes", true)) {
+    if (regRead(REGKEY_PATH + "CompareTextsInShapes", false)) {
       var fo = fso.CreateTextFile(fso.BuildPath(folderDst, prefix + escape(sht.Name) + "_Shapes.txt"), true, true);
       ungroupShapes(sht);
       writeTextsInShapes(fo, sht);
@@ -642,14 +692,14 @@ function UnpackFolder(fileSrc, folderDst, pbChanged, pSubcode) {
       fo = null;
     }
  
-    if (regRead(REGKEY_PATH + "CompareHeadersAndFooters", true)) {
+    if (regRead(REGKEY_PATH + "CompareHeadersAndFooters", false)) {
       var fo = fso.CreateTextFile(fso.BuildPath(folderDst, prefix + escape(sht.Name) + "_HeadersAndFooters.txt"), true, true);
       writeHeadersAndFooters(fo, sht);
       fo.Close();
       fo = null;
     }
  
-    if (regRead(REGKEY_PATH + "CompareWorksheetsAsImage", true)) {
+    if (regRead(REGKEY_PATH + "CompareWorksheetsAsImage", false)) {
       saveSheetAsImage(sht, fso.BuildPath(folderDst, prefix + escape(sht.Name)));
     }
  
@@ -659,7 +709,7 @@ function UnpackFolder(fileSrc, folderDst, pbChanged, pSubcode) {
     No = parseInt(No, 10) + 1;
     sht = null;
   }
-  if (regRead(REGKEY_PATH + "CompareVBAMacros", true)) {
+  if (regRead(REGKEY_PATH + "CompareVBAMacros", false)) {
     if (!isAccessibleVBAProject(wbk)) {
       var fo = fso.CreateTextFile(fso.BuildPath(folderDst, "CannotGetMacros.bas"), true, true);
       fo.WriteLine(translate(MsgCannotGetMacros));
@@ -728,21 +778,22 @@ function run(sh, cmd) {
 
 function exportSettingsToXMLFile(filepath) {
   var key_defvalues = {
-    "UnpackToFolder" : false,
-    "IncludeSheetOrderNumber" : true,
+    "UnpackToFolder" : true,
+    "IncludeSheetOrderNumber" : false,
+    "MatchWorksheetsByName" : true,
     "UpdateLinks" : false,
     "CompareDocumentProperties" : false,
-    "CompareNames" : true,
+    "CompareNames" : false,
     "CompareCellValues" : true,
-    "CompareWorksheetsAsImage" : true,
+    "CompareWorksheetsAsImage" : false,
     "CompareWorksheetsAsHTML" : false,
     "ImageWidth" : 1000,
     "ImageHeight" : 3000,
     "CompareFormulas" : false,
     "CompareFormulasReplaceLineBreaks" : false, 
-    "CompareTextsInShapes" : true,
-    "CompareHeadersAndFooters" : true,
-    "CompareVBAMacros" : true
+    "CompareTextsInShapes" : false,
+    "CompareHeadersAndFooters" : false,
+    "CompareVBAMacros" : false
   };
   var doc = new ActiveXObject("MSXML2.DOMDocument");
   var fso = new ActiveXObject("Scripting.FileSystemObject");
@@ -856,24 +907,26 @@ function importSettingsFromXMLFile(filepath) {
         window.resizeTo(w, h);
         window.moveTo((screen.width - w) / 2, (screen.height - h) / 2);
 
-        chkUnpackToFolder.checked = regRead(REGKEY_PATH + "UnpackToFolder", false);
-        chkIncludeSheetOrderNumber.checked = regRead(REGKEY_PATH + "IncludeSheetOrderNumber", true);
+        chkUnpackToFolder.checked = regRead(REGKEY_PATH + "UnpackToFolder", true);
+        chkIncludeSheetOrderNumber.checked = regRead(REGKEY_PATH + "IncludeSheetOrderNumber", false);
+        chkMatchWorksheetsByName.checked = regRead(REGKEY_PATH + "MatchWorksheetsByName", true);
         chkUpdateLinks.checked = (regRead(REGKEY_PATH + "UpdateLinks", 0) == 3);
         chkCompareDocumentProperties.checked = regRead(REGKEY_PATH + "CompareDocumentProperties", false);
-        chkCompareNames.checked = regRead(REGKEY_PATH + "CompareNames", true);
+        chkCompareNames.checked = regRead(REGKEY_PATH + "CompareNames", false);
         chkCompareCellValues.checked = regRead(REGKEY_PATH + "CompareCellValues", true);
-        chkCompareWorksheetsAsImage.checked = regRead(REGKEY_PATH + "CompareWorksheetsAsImage", true);
+        chkCompareWorksheetsAsImage.checked = regRead(REGKEY_PATH + "CompareWorksheetsAsImage", false);
         chkCompareWorksheetsAsHTML.checked = regRead(REGKEY_PATH + "CompareWorksheetsAsHTML", false);
         txtImageWidth.value = regRead(REGKEY_PATH + "ImageWidth", 1000);
         txtImageHeight.value = regRead(REGKEY_PATH + "ImageHeight", 3000);
         chkCompareFormulas.checked = regRead(REGKEY_PATH + "CompareFormulas", false);
         chkCompareFormulasBrks.checked = regRead(REGKEY_PATH + "CompareFormulasReplaceLineBreaks", false);
-        chkCompareTextsInShapes.checked = regRead(REGKEY_PATH + "CompareTextsInShapes", true);
-        chkCompareHeadersAndFooters.checked = regRead(REGKEY_PATH + "CompareHeadersAndFooters", true);
-        chkCompareVBAMacros.checked = regRead(REGKEY_PATH + "CompareVBAMacros", true);
+        chkCompareTextsInShapes.checked = regRead(REGKEY_PATH + "CompareTextsInShapes", false);
+        chkCompareHeadersAndFooters.checked = regRead(REGKEY_PATH + "CompareHeadersAndFooters", false);
+        chkCompareVBAMacros.checked = regRead(REGKEY_PATH + "CompareVBAMacros", false);
         chkUnpackToFolder_onclick();
         chkCompareWorksheetsAsImage_onclick();
         chkCompareWorksheetsAsHTML_onclick();
+        chkMatchWorksheetsByName_onclick();
         document.onkeydown = onkeydown;
       }
 
@@ -893,6 +946,15 @@ function importSettingsFromXMLFile(filepath) {
         }
       }
 
+      function chkMatchWorksheetsByName_onclick() {
+        // Matching by name needs folder mode and uses the bare sheet name as the
+        // file name, so the sheet order number prefix does not apply.
+        if (chkMatchWorksheetsByName.checked) {
+          chkUnpackToFolder.checked = true;
+          chkIncludeSheetOrderNumber.checked = false;
+        }
+      }
+
       function chkCompareWorksheetsAsImage_onclick() {
         if (chkCompareWorksheetsAsImage.checked)
           chkUnpackToFolder.checked = true;
@@ -906,6 +968,7 @@ function importSettingsFromXMLFile(filepath) {
       function btnOk_onclick() {
         regWrite(REGKEY_PATH + "UnpackToFolder", chkUnpackToFolder.checked, "REG_DWORD");
         regWrite(REGKEY_PATH + "IncludeSheetOrderNumber", chkIncludeSheetOrderNumber.checked, "REG_DWORD");
+        regWrite(REGKEY_PATH + "MatchWorksheetsByName", chkMatchWorksheetsByName.checked, "REG_DWORD");
         regWrite(REGKEY_PATH + "UpdateLinks", chkUpdateLinks.checked ? 3 : 0, "REG_DWORD");
         regWrite(REGKEY_PATH + "CompareDocumentProperties", chkCompareDocumentProperties.checked, "REG_DWORD");
         regWrite(REGKEY_PATH + "CompareNames", chkCompareNames.checked, "REG_DWORD");
@@ -980,6 +1043,10 @@ function importSettingsFromXMLFile(filepath) {
               <label for="chkIncludeSheetOrderNumber">${Include sheet order number in filename}</label>
             </li>
           </ul>
+        </li>
+        <li>
+          <input id="chkMatchWorksheetsByName" type="checkbox" onclick="chkMatchWorksheetsByName_onclick();" />
+          <label for="chkMatchWorksheetsByName">${Match worksheets by name}</label>
         </li>
         <li>
           <input id="chkUpdateLinks" type="checkbox" />
