@@ -50,9 +50,10 @@ where cargo.exe > NUL 2> NUL || (
   exit /b 1
 )
 rustup target list --installed | findstr /I /C:"%RUST_TARGET%" > NUL || rustup target add %RUST_TARGET% || goto :eof
-cargo build --manifest-path "Plugins\Commands\excel2tsv\Cargo.toml" --release --target %RUST_TARGET% --target-dir "Build\Cargo\excel2tsv" || goto :eof
+cargo build --lib --manifest-path "Plugins\Commands\excel2tsv\Cargo.toml" --release --target %RUST_TARGET% --target-dir "Build\Cargo\excel2tsv" || goto :eof
 mkdir Build\%1\Release\Commands\excel2tsv 2> NUL
-copy /Y "Build\Cargo\excel2tsv\%RUST_TARGET%\release\excel2tsv.exe" "Build\%1\Release\Commands\excel2tsv\" || goto :eof
+del /Q "Build\%1\Release\Commands\excel2tsv\excel2tsv.exe" 2> NUL
+copy /Y "Build\Cargo\excel2tsv\%RUST_TARGET%\release\excel2tsv_dll.dll" "Build\%1\Release\Commands\excel2tsv\excel2tsv.dll" || goto :eof
 goto :eof
 
 :CopyPlugins

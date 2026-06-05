@@ -5,5 +5,9 @@ edition = "2021"
 license = "MIT"
 publish = false
 
+[lib]
+name = "excel2tsv_dll"
+crate-type = ["cdylib", "rlib"]
+
 [dependencies]
 calamine = "0.35"

@@ -19,6 +19,7 @@
 #include <algorithm>
 #include <cassert>
 #include <set>
+#include <chrono>
 #include <Poco/Mutex.h>
 #include <Poco/ScopedLock.h>
 #include <Poco/RegularExpression.h>
@@ -947,6 +948,46 @@ static std::map<String, PluginArrayPtr> GetAvailableScripts()
 	return plugins;
 }
 
+static std::map<String, PluginArrayPtr> GetAvailableInternalPlugins()
+{
+	std::map<std::wstring, PluginArrayPtr> plugins;
+	if (CAllThreadsScripts::GetInternalPluginsLoader())
+	{
+		String errmsg;
+		if (!CAllThreadsScripts::GetInternalPluginsLoader()(plugins, errmsg))
+			AppErrorMessageBox(errmsg);
+	}
+	ResolveNameConflict(plugins);
+	LoadCustomSettings(plugins);
+	return plugins;
+}
+
+static bool IsExcelWorkbookPath(const String& filteredText)
+{
+	const String ext = paths::FindExtension(filteredText);
+	return strutils::compare_nocase(ext, _T(".xls")) == 0 ||
+		strutils::compare_nocase(ext, _T(".xlsx")) == 0 ||
+		strutils::compare_nocase(ext, _T(".xlsm")) == 0 ||
+		strutils::compare_nocase(ext, _T(".xlsb")) == 0;
+}
+
+static bool IsExcelPluginLogEnabled()
+{
+	DWORD length = GetEnvironmentVariable(_T("WINMERGE_EXCEL_LOG"), nullptr, 0);
+	if (length == 0)
+		return false;
+	std::vector<tchar_t> buffer(length);
+	if (GetEnvironmentVariable(_T("WINMERGE_EXCEL_LOG"), buffer.data(), static_cast<DWORD>(buffer.size())) == 0)
+		return false;
+	String value(buffer.data());
+	return value != _T("0") && strutils::compare_nocase(value, _T("false")) != 0;
+}
+
+static long long ElapsedMilliseconds(std::chrono::steady_clock::time_point start)
+{
+	return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start).count();
+}
+
 static void FreeAllScripts(PluginArrayPtr& pArray) 
 {
 	pArray->clear();
@@ -971,6 +1012,7 @@ CScriptsOfThread::CScriptsOfThread()
 	m_nLocks = 0;
 	// initialize the plugins pointers
 	typedef PluginArray * LPPluginArray;
+	m_bPluginsFullyLoaded = false;
 	// CoInitialize the thread, keep the returned value for the destructor 
 	hrInitialize = CoInitialize(nullptr);
 	assert(hrInitialize == S_OK || hrInitialize == S_FALSE);
@@ -1003,8 +1045,11 @@ void CScriptsOfThread::SetHostObject(IDispatch* pHostObject)
 
 PluginArray * CScriptsOfThread::GetAvailableScripts(const wchar_t *transformationEvent)
 {
-	if (m_aPluginsByEvent.empty())
+	if (!m_bPluginsFullyLoaded)
+	{
 		m_aPluginsByEvent = ::GetAvailableScripts();
+		m_bPluginsFullyLoaded = true;
+	}
 	if (auto it = m_aPluginsByEvent.find(transformationEvent); it != m_aPluginsByEvent.end())
 		return it->second.get();
 	// return a pointer to an empty list
@@ -1014,8 +1059,11 @@ PluginArray * CScriptsOfThread::GetAvailableScripts(const wchar_t *transformatio
 
 void CScriptsOfThread::SaveSettings()
 {
-	if (m_aPluginsByEvent.empty())
+	if (!m_bPluginsFullyLoaded)
+	{
 		m_aPluginsByEvent = ::GetAvailableScripts();
+		m_bPluginsFullyLoaded = true;
+	}
 	std::vector<String> list;
 	for (auto [key, pArray] : m_aPluginsByEvent)
 	{
@@ -1047,16 +1095,51 @@ void CScriptsOfThread::FreeAllScripts()
 	UnloadTheScriptletList();
 
 	m_aPluginsByEvent.clear();
+	m_bPluginsFullyLoaded = false;
 }
 
 void CScriptsOfThread::ReloadAllScripts()
 {
 	FreeAllScripts();
 	m_aPluginsByEvent = ::GetAvailableScripts();
+	m_bPluginsFullyLoaded = true;
 }
 
 PluginInfo *CScriptsOfThread::GetAutomaticPluginByFilter(const wchar_t *transformationEvent, const String& filteredText)
 {
+	if (!m_bPluginsFullyLoaded &&
+		wcscmp(transformationEvent, L"FILE_FOLDER_PACK_UNPACK") == 0 &&
+		IsExcelWorkbookPath(filteredText))
+	{
+		if (m_aPluginsByEvent.empty())
+		{
+			const auto start = std::chrono::steady_clock::now();
+			m_aPluginsByEvent = GetAvailableInternalPlugins();
+			if (IsExcelPluginLogEnabled())
+			{
+				RootLogger::Info(strutils::format(
+					_T("[ExcelPlugin] internal-only plugin fast-load elapsed=%lldms file=\"%s\""),
+					ElapsedMilliseconds(start),
+					filteredText.c_str()));
+			}
+		}
+		if (auto it = m_aPluginsByEvent.find(transformationEvent); it != m_aPluginsByEvent.end())
+		{
+			PluginArray* piFileScriptArray = it->second.get();
+			for (size_t step = 0; step < piFileScriptArray->size(); step++)
+			{
+				const PluginInfoPtr& plugin = piFileScriptArray->at(step);
+				if (plugin->m_name != _T("CompareExcelSheetsFast"))
+					continue;
+				if (!plugin->m_bAutomatic || plugin->m_disabled)
+					continue;
+				if (!plugin->TestAgainstRegList(filteredText))
+					continue;
+				return plugin.get();
+			}
+		}
+	}
+
 	PluginArray * piFileScriptArray = GetAvailableScripts(transformationEvent);
 	for (size_t step = 0 ; step < piFileScriptArray->size() ; step ++)
 	{
@@ -1072,8 +1155,11 @@ PluginInfo *CScriptsOfThread::GetAutomaticPluginByFilter(const wchar_t *transfor
 
 PluginInfo * CScriptsOfThread::GetPluginByName(const wchar_t *transformationEvent, const String& name)
 {
-	if (m_aPluginsByEvent.empty())
+	if (!m_bPluginsFullyLoaded)
+	{
 		m_aPluginsByEvent = ::GetAvailableScripts();
+		m_bPluginsFullyLoaded = true;
+	}
 	for (auto [key, pArray] : m_aPluginsByEvent)
 	{
 		if (!transformationEvent || key == transformationEvent)

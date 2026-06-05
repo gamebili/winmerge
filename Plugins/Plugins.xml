@@ -42,10 +42,10 @@
     <unpacked-file-extension value=".tsv" />
     <extended-properties value="ProcessType=Content Extraction;FileType=MS-Excel;MenuCaption=Fast MS-Excel Sheets;PreferredWindowType=Folder" />
     <is-folder>
-      <command>"${WINMERGE_HOME}\Commands\excel2tsv\excel2tsv.exe" --is-folder "${SRC_FILE}"</command>
+      <command>internal:true</command>
     </is-folder>
     <unpack-folder>
-      <command>"${WINMERGE_HOME}\Commands\excel2tsv\excel2tsv.exe" unpack-folder "${SRC_FILE}" "${DST_FOLDER}"</command>
+      <command>internal:excel2tsv:unpack-folder</command>
     </unpack-folder>
   </plugin>
   <plugin name="PrettifyHTML">

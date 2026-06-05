@@ -65,7 +65,8 @@ void Init(COptionsMgr *pOptions)
 	pOptions->InitOption(OPT_SHOW_TABBAR, true);
 	pOptions->InitOption(OPT_SHOW_OUTPUTBAR, false);
 	pOptions->InitOption(OPT_REBAR_STATE, _T(""));
-	pOptions->InitOption(OPT_TOOLBAR_SIZE, 0, 0, 3);
+	// Default to the largest toolbar icons: Small(0), Medium(1), Big(2), Huge(3).
+	pOptions->InitOption(OPT_TOOLBAR_SIZE, 3, 0, 3);
 	pOptions->InitOption(OPT_RESIZE_PANES, false);
 
 	pOptions->InitOption(OPT_SYNTAX_HIGHLIGHT, true);

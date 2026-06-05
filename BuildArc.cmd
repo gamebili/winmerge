@@ -214,7 +214,7 @@ copy Build\md4c\mingw32\share\licenses\md4c\LICENSE.md "%DISTDIR%\%PLATFORMH%zip
 
 rem Copy excel2tsv...
 echo Copy excel2tsv...
-copy Build\%PLATFORM%\Release\Commands\excel2tsv\excel2tsv.exe "%DISTDIR%\%PLATFORMH%zip-version\WinMerge\Commands\excel2tsv\excel2tsv.exe" > NUL
+copy Build\%PLATFORM%\Release\Commands\excel2tsv\excel2tsv.dll "%DISTDIR%\%PLATFORMH%zip-version\WinMerge\Commands\excel2tsv\excel2tsv.dll" > NUL
 
 rem Plugin.xml
 copy Plugins\Plugins.xml "%DISTDIR%\%PLATFORMH%zip-version\WinMerge\MergePlugins\" > NUL

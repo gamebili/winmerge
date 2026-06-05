@@ -23,6 +23,8 @@
 #include "UniFile.h"
 #include "WinMergePluginBase.h"
 #include "TempFile.h"
+#include "Logger.h"
+#include <chrono>
 
 using Poco::FileStream;
 using Poco::Exception;
@@ -68,6 +70,131 @@ namespace
 		fileOut.SetUnicoding(ucr::UNICODESET::UTF8);
 		fileOut.WriteString(text);
 		fileOut.Close();
+		return S_OK;
+	}
+
+	bool IsExcelPluginLogEnabled()
+	{
+		DWORD length = GetEnvironmentVariable(_T("WINMERGE_EXCEL_LOG"), nullptr, 0);
+		if (length == 0)
+			return false;
+
+		std::vector<tchar_t> buffer(length);
+		if (GetEnvironmentVariable(_T("WINMERGE_EXCEL_LOG"), buffer.data(), static_cast<DWORD>(buffer.size())) == 0)
+			return false;
+
+		String value = strutils::makelower(strutils::trim_ws(buffer.data()));
+		return !(value.empty() || value == _T("0") || value == _T("false") ||
+			value == _T("off") || value == _T("no"));
+	}
+
+	int64_t ElapsedMilliseconds(std::chrono::steady_clock::time_point start)
+	{
+		return std::chrono::duration_cast<std::chrono::milliseconds>(
+			std::chrono::steady_clock::now() - start).count();
+	}
+
+	String FormatHResult(HRESULT hr)
+	{
+		return strutils::format(_T("0x%08X"), static_cast<unsigned>(hr));
+	}
+
+	String TrimLogOutput(const String& output)
+	{
+		String text = strutils::trim_ws(output);
+		constexpr size_t MaxLogOutputChars = 12000;
+		if (text.length() > MaxLogOutputChars)
+			text = text.substr(0, MaxLogOutputChars) + _T("\n...<truncated>");
+		return text;
+	}
+
+	HRESULT SetPluginErrorInfo(const String& source, const String& description, HRESULT fallback = DISP_E_EXCEPTION)
+	{
+		ICreateErrorInfo* pCreateErrorInfo = nullptr;
+		if (SUCCEEDED(CreateErrorInfo(&pCreateErrorInfo)))
+		{
+			pCreateErrorInfo->SetSource(const_cast<OLECHAR*>(source.c_str()));
+			pCreateErrorInfo->SetDescription(const_cast<OLECHAR*>(ucr::toUTF16(description).c_str()));
+			IErrorInfo* pErrorInfo = nullptr;
+			pCreateErrorInfo->QueryInterface(&pErrorInfo);
+			SetErrorInfo(0, pErrorInfo);
+			pErrorInfo->Release();
+			pCreateErrorInfo->Release();
+			return DISP_E_EXCEPTION;
+		}
+		return fallback;
+	}
+
+	String FormatWin32Error(DWORD error)
+	{
+		return strutils::format(_T("Win32 error %lu"), error);
+	}
+
+	using Excel2TsvUnpackFolderUtf16 = int (WINAPI *)(const wchar_t*, const wchar_t*, wchar_t*, size_t);
+
+	HRESULT GetExcel2TsvUnpackFolder(Excel2TsvUnpackFolderUtf16& fn)
+	{
+#ifdef _UNICODE
+		static HMODULE module = nullptr;
+		static Excel2TsvUnpackFolderUtf16 cachedFn = nullptr;
+		if (cachedFn)
+		{
+			fn = cachedFn;
+			return S_OK;
+		}
+
+		const String dllPath = paths::ConcatPath(env::GetProgPath(), _T("Commands\\excel2tsv\\excel2tsv.dll"));
+		if (!module)
+		{
+			module = LoadLibrary(dllPath.c_str());
+			if (!module)
+			{
+				const DWORD error = GetLastError();
+				return SetPluginErrorInfo(dllPath,
+					strutils::format(_T("LoadLibrary failed for %s: %s"), dllPath.c_str(), FormatWin32Error(error).c_str()),
+					HRESULT_FROM_WIN32(error));
+			}
+		}
+
+		cachedFn = reinterpret_cast<Excel2TsvUnpackFolderUtf16>(
+			GetProcAddress(module, "excel2tsv_unpack_folder_utf16"));
+		if (!cachedFn)
+		{
+			const DWORD error = GetLastError();
+			return SetPluginErrorInfo(dllPath,
+				strutils::format(_T("GetProcAddress(excel2tsv_unpack_folder_utf16) failed: %s"), FormatWin32Error(error).c_str()),
+				HRESULT_FROM_WIN32(error));
+		}
+
+		fn = cachedFn;
+		return S_OK;
+#else
+		fn = nullptr;
+		return E_NOTIMPL;
+#endif
+	}
+
+	HRESULT UnpackExcelFolderInProcess(const wchar_t* source, const wchar_t* destination, bool logTiming)
+	{
+		Excel2TsvUnpackFolderUtf16 unpackFolder = nullptr;
+		HRESULT hr = GetExcel2TsvUnpackFolder(unpackFolder);
+		if (FAILED(hr))
+			return hr;
+
+		constexpr size_t DiagnosticChars = 65536;
+		std::vector<wchar_t> diagnostics(DiagnosticChars);
+		const int result = unpackFolder(source, destination, diagnostics.data(), diagnostics.size());
+		const String diagnosticText = TrimLogOutput(diagnostics.data());
+		if (logTiming && !diagnosticText.empty())
+			RootLogger::Info(_T("[ExcelPlugin] dll output:\n") + diagnosticText);
+
+		if (result != 0)
+		{
+			const String description = diagnosticText.empty() ?
+				strutils::format(_T("excel2tsv.dll failed with code %d"), result) : diagnosticText;
+			return SetPluginErrorInfo(_T("excel2tsv.dll"), description);
+		}
+
 		return S_OK;
 	}
 }
@@ -331,8 +458,8 @@ public:
 		DWORD dwExitCode;
 		HRESULT hr = launchProgram(command, SW_HIDE, dwExitCode);
 
-		*pbChanged = SUCCEEDED(hr);
-		*pbSuccess = SUCCEEDED(hr);
+		*pbChanged = SUCCEEDED(hr) ? VARIANT_TRUE : VARIANT_FALSE;
+		*pbSuccess = SUCCEEDED(hr) ? VARIANT_TRUE : VARIANT_FALSE;
 		return hr;
 	}
 
@@ -356,8 +483,8 @@ public:
 		HRESULT hr = launchProgram(command, SW_HIDE, dwExitCode);
 
 		*pSubcode = 0;
-		*pbChanged = SUCCEEDED(hr);
-		*pbSuccess = SUCCEEDED(hr);
+		*pbChanged = SUCCEEDED(hr) ? VARIANT_TRUE : VARIANT_FALSE;
+		*pbSuccess = SUCCEEDED(hr) ? VARIANT_TRUE : VARIANT_FALSE;
 		return hr;
 	}
 
@@ -379,8 +506,8 @@ public:
 		DWORD dwExitCode;
 		HRESULT hr = launchProgram(command, SW_HIDE, dwExitCode);
 
-		*pbChanged = SUCCEEDED(hr);
-		*pbSuccess = SUCCEEDED(hr);
+		*pbChanged = SUCCEEDED(hr) ? VARIANT_TRUE : VARIANT_FALSE;
+		*pbSuccess = SUCCEEDED(hr) ? VARIANT_TRUE : VARIANT_FALSE;
 		return hr;
 	}
 
@@ -391,6 +518,8 @@ public:
 			*pbFolder = VARIANT_FALSE;
 			return S_OK;
 		}
+		const bool logTiming = ShouldLogExcelTiming();
+		const auto start = std::chrono::steady_clock::now();
 		TempFile scriptFile;
 		String command = replaceMacros(m_info.m_isFolder->m_command, file, file);
 		if (m_info.m_isFolder->m_script)
@@ -398,9 +527,32 @@ public:
 			createScript(*m_info.m_isFolder->m_script, scriptFile);
 			strutils::replace(command, _T("${SCRIPT_FILE}"), scriptFile.GetPath());
 		}
-		DWORD dwExitCode;
-		HRESULT hr = launchProgram(command, SW_HIDE, dwExitCode);
-		*pbFolder = SUCCEEDED(hr) && dwExitCode == 0;
+		const String constantResult = strutils::trim_ws(command);
+		if (strutils::compare_nocase(constantResult, _T("internal:true")) == 0 ||
+			strutils::compare_nocase(constantResult, _T("internal:false")) == 0)
+		{
+			// Constant IsFolder answers avoid spawning a helper process for plugins
+			// whose file filter has already identified the input type.
+			*pbFolder = strutils::compare_nocase(constantResult, _T("internal:true")) == 0 ? VARIANT_TRUE : VARIANT_FALSE;
+			if (logTiming)
+			{
+				RootLogger::Info(strutils::format(
+					_T("[ExcelPlugin] IsFolder constant plugin=\"%s\" result=%s elapsed=%lldms file=\"%s\""),
+					m_info.m_name.c_str(), *pbFolder == VARIANT_TRUE ? _T("true") : _T("false"),
+					ElapsedMilliseconds(start), file));
+			}
+			return S_OK;
+		}
+		DWORD dwExitCode = static_cast<DWORD>(-1);
+		HRESULT hr = launchProgram(command, SW_HIDE, dwExitCode, logTiming);
+		*pbFolder = SUCCEEDED(hr) && dwExitCode == 0 ? VARIANT_TRUE : VARIANT_FALSE;
+		if (logTiming)
+		{
+			RootLogger::Info(strutils::format(
+				_T("[ExcelPlugin] IsFolder process plugin=\"%s\" result=%s elapsed=%lldms hr=%s exit=%lu file=\"%s\""),
+				m_info.m_name.c_str(), *pbFolder == VARIANT_TRUE ? _T("true") : _T("false"),
+				ElapsedMilliseconds(start), FormatHResult(hr).c_str(), dwExitCode, file));
+		}
 		return hr;
 	}
 
@@ -413,6 +565,14 @@ public:
 			*pbSuccess = VARIANT_FALSE;
 			return S_OK;
 		}
+		const bool logTiming = ShouldLogExcelTiming();
+		const auto start = std::chrono::steady_clock::now();
+		if (logTiming)
+		{
+			RootLogger::Info(strutils::format(
+				_T("[ExcelPlugin] UnpackFolder start plugin=\"%s\" source=\"%s\" destination=\"%s\""),
+				m_info.m_name.c_str(), fileSrc, folderDst));
+		}
 		TempFile scriptFile;
 		String command = replaceMacros(m_info.m_unpackFolder->m_command, fileSrc, folderDst);
 		if (m_info.m_unpackFolder->m_script)
@@ -420,12 +580,37 @@ public:
 			createScript(*m_info.m_unpackFolder->m_script, scriptFile);
 			strutils::replace(command, _T("${SCRIPT_FILE}"), scriptFile.GetPath());
 		}
-		DWORD dwExitCode;
-		HRESULT hr = launchProgram(command, SW_HIDE, dwExitCode);
+		const String internalCommand = strutils::trim_ws(command);
+		if (strutils::compare_nocase(internalCommand, _T("internal:excel2tsv:unpack-folder")) == 0)
+		{
+			HRESULT hr = UnpackExcelFolderInProcess(fileSrc, folderDst, logTiming);
+			*pSubcode = 0;
+			*pbChanged = SUCCEEDED(hr) ? VARIANT_TRUE : VARIANT_FALSE;
+			*pbSuccess = SUCCEEDED(hr) ? VARIANT_TRUE : VARIANT_FALSE;
+			if (logTiming)
+			{
+				RootLogger::Info(strutils::format(
+					_T("[ExcelPlugin] UnpackFolder done plugin=\"%s\" mode=in-process changed=%s success=%s elapsed=%lldms hr=%s source=\"%s\" destination=\"%s\""),
+					m_info.m_name.c_str(), *pbChanged == VARIANT_TRUE ? _T("true") : _T("false"),
+					*pbSuccess == VARIANT_TRUE ? _T("true") : _T("false"), ElapsedMilliseconds(start),
+					FormatHResult(hr).c_str(), fileSrc, folderDst));
+			}
+			return hr;
+		}
+		DWORD dwExitCode = static_cast<DWORD>(-1);
+		HRESULT hr = launchProgram(command, SW_HIDE, dwExitCode, logTiming);
 
 		*pSubcode = 0;
-		*pbChanged = SUCCEEDED(hr);
-		*pbSuccess = SUCCEEDED(hr);
+		*pbChanged = SUCCEEDED(hr) ? VARIANT_TRUE : VARIANT_FALSE;
+		*pbSuccess = SUCCEEDED(hr) ? VARIANT_TRUE : VARIANT_FALSE;
+		if (logTiming)
+		{
+			RootLogger::Info(strutils::format(
+				_T("[ExcelPlugin] UnpackFolder done plugin=\"%s\" changed=%s success=%s elapsed=%lldms hr=%s exit=%lu source=\"%s\" destination=\"%s\""),
+				m_info.m_name.c_str(), *pbChanged == VARIANT_TRUE ? _T("true") : _T("false"),
+				*pbSuccess == VARIANT_TRUE ? _T("true") : _T("false"), ElapsedMilliseconds(start),
+				FormatHResult(hr).c_str(), dwExitCode, fileSrc, folderDst));
+		}
 		return hr;
 	}
 
@@ -600,7 +785,7 @@ protected:
 		return WriteFile(path, script.m_body, false);
 	}
 
-	static HRESULT launchProgram(const String& sCmd, WORD wShowWindow, DWORD &dwExitCode)
+	static HRESULT launchProgram(const String& sCmd, WORD wShowWindow, DWORD &dwExitCode, bool logOutput = false)
 	{
 		TempFile stderrFile;
 		String sOutputFile = stderrFile.Create();
@@ -635,15 +820,24 @@ protected:
 			dwStdErrorSize = GetFileSize(stInfo.hStdError, &dwStdErrorSizeHigh);
 			CloseHandle(stInfo.hStdError);
 		}
+		String output;
+		if (dwStdErrorSize > 0)
+		{
+			ReadFile(sOutputFile, output);
+			if (logOutput)
+			{
+				String logOutputText = TrimLogOutput(output);
+				if (!logOutputText.empty())
+					RootLogger::Info(_T("[ExcelPlugin] helper output:\n") + logOutputText);
+			}
+		}
 		if (dwExitCode != 0 && dwStdErrorSize > 0)
 		{
-			String error;
-			ReadFile(sOutputFile, error);
 			ICreateErrorInfo* pCreateErrorInfo = nullptr;
 			if (SUCCEEDED(CreateErrorInfo(&pCreateErrorInfo)))
 			{
 				pCreateErrorInfo->SetSource(const_cast<OLECHAR*>(command.c_str()));
-				pCreateErrorInfo->SetDescription(const_cast<OLECHAR*>(ucr::toUTF16(error).c_str()));
+				pCreateErrorInfo->SetDescription(const_cast<OLECHAR*>(ucr::toUTF16(output).c_str()));
 				IErrorInfo* pErrorInfo = nullptr;
 				pCreateErrorInfo->QueryInterface(&pErrorInfo);
 				SetErrorInfo(0, pErrorInfo);
@@ -653,6 +847,15 @@ protected:
 			}
 		}
 		return S_OK;
+	}
+
+	bool ShouldLogExcelTiming() const
+	{
+		if (!IsExcelPluginLogEnabled())
+			return false;
+		String extendedProperties = strutils::makelower(m_info.m_extendedProperties);
+		return m_info.m_name == _T("CompareExcelSheetsFast") ||
+			extendedProperties.find(_T("filetype=ms-excel")) != String::npos;
 	}
 
 	Info m_info;

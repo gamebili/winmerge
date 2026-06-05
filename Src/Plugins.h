@@ -129,6 +129,7 @@ private:
 	/// Result of CoInitialize
 	HRESULT hrInitialize;
 	int nTransformationEvents;
+	bool m_bPluginsFullyLoaded;
 	std::map<String, PluginArrayPtr> m_aPluginsByEvent;
 	IDispatch* m_pHostObject;
 };

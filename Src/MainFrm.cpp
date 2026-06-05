@@ -106,6 +106,26 @@ static CPtrList &GetDocList(CMultiDocTemplate *pTemplate);
 template<class DocClass>
 DocClass * GetMergeDocForDiff(CMultiDocTemplate *pTemplate, IDirDoc *pDirDoc, int nFiles, bool bMakeVisible = true);
 
+static String GetLogFilePath()
+{
+	DWORD length = GetEnvironmentVariable(_T("WINMERGE_LOG_FILE"), nullptr, 0);
+	if (length > 0)
+	{
+		std::vector<tchar_t> buffer(length);
+		if (GetEnvironmentVariable(_T("WINMERGE_LOG_FILE"), buffer.data(), static_cast<DWORD>(buffer.size())) > 0)
+		{
+			String path = strutils::trim_ws(env::ExpandEnvironmentVariables(buffer.data()));
+			if (!path.empty())
+			{
+				paths::CreateIfNeeded(paths::GetParentPath(path));
+				return path;
+			}
+		}
+	}
+
+	return paths::ConcatPath(env::GetTemporaryPath(), _T("WinMerge.log"));
+}
+
 /**
  * @brief A table associating menuitem id, icon and menus to apply.
  */
@@ -2663,8 +2683,7 @@ void CMainFrame::ProcessLog()
 
 	if (m_logging > 0 && !m_pLogChannel)
 	{
-		Poco::Channel::Ptr pSimpleFileChannel= new Poco::SimpleFileChannel(
-			ucr::toUTF8(paths::ConcatPath(env::GetTemporaryPath(), _T("WinMerge.log"))));
+		Poco::Channel::Ptr pSimpleFileChannel= new Poco::SimpleFileChannel(ucr::toUTF8(GetLogFilePath()));
 		m_pLogChannel = new Poco::AsyncChannel(pSimpleFileChannel);
 	}
 	
