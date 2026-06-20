@@ -855,7 +855,28 @@ static bool IsExcelWorkbookPath(const String& path)
 		ext == _T(".xltx") || ext == _T(".xltm");
 }
 
-static bool ShouldPreferExcelUnpacker(const PathContext& paths, UINT nID, const PackingInfo* infoUnpacker)
+static bool IsUE5CoreAssetPath(const String& path)
+{
+	if (path.empty() || paths::IsURLorCLSID(path) || paths::IsNullDeviceName(path))
+		return false;
+	const String ext = strutils::makelower(paths::FindExtension(path));
+	if (ext == _T(".exp"))
+	{
+		// Avoid treating ordinary linker export files as UE payloads.
+		const String stem = paths::RemoveExtension(path);
+		static const tchar_t* SidecarExtensions[] = { _T(".uasset"), _T(".umap"), _T(".uexp"), _T(".ubulk"), _T(".uptnl") };
+		for (const tchar_t* sidecarExt : SidecarExtensions)
+		{
+			if (paths::DoesPathExist(stem + sidecarExt) == paths::IS_EXISTING_FILE)
+				return true;
+		}
+		return false;
+	}
+	return ext == _T(".uasset") || ext == _T(".umap") || ext == _T(".pak") ||
+		ext == _T(".ucas") || ext == _T(".utoc") || ext == _T(".uexp");
+}
+
+static bool ShouldPreferAutomaticFolderUnpacker(const PathContext& paths, UINT nID, const PackingInfo* infoUnpacker)
 {
 	if (static_cast<int>(nID) > 0 || !GetOptionsMgr()->GetBool(OPT_PLUGINS_ENABLED))
 		return false;
@@ -864,9 +885,12 @@ static bool ShouldPreferExcelUnpacker(const PathContext& paths, UINT nID, const 
 	if (paths.GetSize() < 1)
 		return false;
 
-	// Excel workbooks are binary containers, so without a targeted automatic
-	// unpacker they fall through to the hex view when global auto-unpack is off.
-	return std::all_of(paths.begin(), paths.end(), IsExcelWorkbookPath);
+	// These binary containers need their in-process folder unpackers even when
+	// the global automatic unpacker option is off; otherwise they fall through
+	// to the hex/text fallback before the plugin can choose the folder view.
+	return std::all_of(paths.begin(), paths.end(), [](const auto& path) {
+		return IsExcelWorkbookPath(path) || IsUE5CoreAssetPath(path);
+	});
 }
 
 bool CMainFrame::ShowAutoMergeDoc(UINT nID, IDirDoc * pDirDoc,
@@ -1633,9 +1657,9 @@ bool CMainFrame::DoFileOrFolderOpen(const PathContext * pFiles /*= nullptr*/,
 	if (pFiles != nullptr)
 		tFiles = *pFiles;
 
-	PackingInfo excelUnpacker(_T("<Automatic>"));
-	if (ShouldPreferExcelUnpacker(tFiles, nID, infoUnpacker))
-		infoUnpacker = &excelUnpacker;
+	PackingInfo automaticFolderUnpacker(_T("<Automatic>"));
+	if (ShouldPreferAutomaticFolderUnpacker(tFiles, nID, infoUnpacker))
+		infoUnpacker = &automaticFolderUnpacker;
 
 	Merge7zFormatMergePluginScope scope(infoUnpacker);
 
@@ -1780,9 +1804,9 @@ bool CMainFrame::DoFileOpen(UINT nID, const PathContext* pFiles,
 	const OpenParams *pOpenParams /*= nullptr*/)
 {
 	ASSERT(pFiles != nullptr);
-	PackingInfo excelUnpacker(_T("<Automatic>"));
-	if (ShouldPreferExcelUnpacker(*pFiles, nID, infoUnpacker))
-		infoUnpacker = &excelUnpacker;
+	PackingInfo automaticFolderUnpacker(_T("<Automatic>"));
+	if (ShouldPreferAutomaticFolderUnpacker(*pFiles, nID, infoUnpacker))
+		infoUnpacker = &automaticFolderUnpacker;
 
 	FileLocation fileloc[3];
 	for (int pane = 0; pane < pFiles->GetSize(); pane++)

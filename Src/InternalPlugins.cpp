@@ -24,6 +24,7 @@
 #include "WinMergePluginBase.h"
 #include "TempFile.h"
 #include "Logger.h"
+#include "libUE5Core/UE5Core.h"
 #include <chrono>
 
 using Poco::FileStream;
@@ -195,6 +196,17 @@ namespace
 			return SetPluginErrorInfo(_T("excel2tsv.dll"), description);
 		}
 
+		return S_OK;
+	}
+
+	HRESULT UnpackUE5CoreFolderInProcess(const wchar_t* source, const wchar_t* destination)
+	{
+		std::wstring error;
+		if (!UE5Core::UnpackFolder(source, destination, &error))
+		{
+			String description = error.empty() ? _T("Failed to unpack Unreal Engine file") : String(error.c_str());
+			return SetPluginErrorInfo(_T("libUE5Core"), description);
+		}
 		return S_OK;
 	}
 }
@@ -595,6 +607,14 @@ public:
 					*pbSuccess == VARIANT_TRUE ? _T("true") : _T("false"), ElapsedMilliseconds(start),
 					FormatHResult(hr).c_str(), fileSrc, folderDst));
 			}
+			return hr;
+		}
+		if (strutils::compare_nocase(internalCommand, _T("internal:ue5core:unpack-folder")) == 0)
+		{
+			HRESULT hr = UnpackUE5CoreFolderInProcess(fileSrc, folderDst);
+			*pSubcode = 0;
+			*pbChanged = SUCCEEDED(hr) ? VARIANT_TRUE : VARIANT_FALSE;
+			*pbSuccess = SUCCEEDED(hr) ? VARIANT_TRUE : VARIANT_FALSE;
 			return hr;
 		}
 		DWORD dwExitCode = static_cast<DWORD>(-1);

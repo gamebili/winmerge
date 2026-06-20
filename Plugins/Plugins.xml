@@ -48,6 +48,20 @@
       <command>internal:excel2tsv:unpack-folder</command>
     </unpack-folder>
   </plugin>
+  <plugin name="CompareUE5Assets">
+    <event value="FILE_FOLDER_PACK_UNPACK" />
+    <description value="Unreal Engine 5 asset/container extractor (libUE5Core).&#xD;&#xA;Expands UE packages and containers into stable summary files for folder comparison." />
+    <file-filters value="\.uasset$;\.umap$;\.pak$;\.ucas$;\.utoc$;\.uexp$;\.exp$" />
+    <is-automatic value="true" />
+    <unpacked-file-extension value=".txt" />
+    <extended-properties value="ProcessType=Content Extraction;FileType=Unreal Engine;MenuCaption=UE5 Asset;PreferredWindowType=Folder" />
+    <is-folder>
+      <command>internal:true</command>
+    </is-folder>
+    <unpack-folder>
+      <command>internal:ue5core:unpack-folder</command>
+    </unpack-folder>
+  </plugin>
   <plugin name="PrettifyHTML">
     <event value="FILE_PACK_UNPACK" />
     <description value="HTML Prettier (tidy-html5).&#xD;&#xA;Arguments: tidy command line options." />

@@ -66,13 +66,33 @@ static bool IsExcelWorkbookPath(const String& path)
 		ext == _T(".xltx") || ext == _T(".xltm");
 }
 
-static bool IsExcelArchiveCompare(int nDirs, const CTempPathContext* pTempPathContext)
+static bool IsUE5CoreAssetPath(const String& path)
+{
+	const String ext = strutils::makelower(paths::FindExtension(path));
+	if (ext == _T(".exp"))
+	{
+		// .exp also belongs to native toolchains, so require UE sidecar context.
+		const String stem = paths::RemoveExtension(path);
+		static const tchar_t* SidecarExtensions[] = { _T(".uasset"), _T(".umap"), _T(".uexp"), _T(".ubulk"), _T(".uptnl") };
+		for (const tchar_t* sidecarExt : SidecarExtensions)
+		{
+			if (paths::DoesPathExist(stem + sidecarExt) == paths::IS_EXISTING_FILE)
+				return true;
+		}
+		return false;
+	}
+	return ext == _T(".uasset") || ext == _T(".umap") || ext == _T(".pak") ||
+		ext == _T(".ucas") || ext == _T(".utoc") || ext == _T(".uexp");
+}
+
+static bool IsVirtualFolderUnpackerCompare(int nDirs, const CTempPathContext* pTempPathContext)
 {
 	if (pTempPathContext == nullptr)
 		return false;
 	for (int nIndex = 0; nIndex < nDirs; ++nIndex)
 	{
-		if (!IsExcelWorkbookPath(pTempPathContext->m_strDisplayRoot[nIndex]))
+		const auto& path = pTempPathContext->m_strDisplayRoot[nIndex];
+		if (!IsExcelWorkbookPath(path) && !IsUE5CoreAssetPath(path))
 			return false;
 	}
 	return true;
@@ -209,9 +229,9 @@ void CDirDoc::InitCompare(const PathContext & paths, bool bRecursive, CTempPathC
 	m_pCtxt.reset(new CDiffContext(paths,
 			GetOptionsMgr()->GetInt(OPT_CMP_METHOD)));
 	m_pCtxt->m_bRecursive = bRecursive;
-	// Excel sheets are shown as a virtual folder, so display both side names
-	// even when they match to make it clear that each row represents both workbooks.
-	m_pCtxt->m_bShowBothFilenames = IsExcelArchiveCompare(m_nDirs, pTempPathContext);
+	// Virtual folder unpackers compare generated files, so display both side
+	// names even when they match to keep the source containers visible.
+	m_pCtxt->m_bShowBothFilenames = IsVirtualFolderUnpackerCompare(m_nDirs, pTempPathContext);
 
 	if (pTempPathContext != nullptr)
 	{

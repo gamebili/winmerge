@@ -968,7 +968,49 @@ static bool IsExcelWorkbookPath(const String& filteredText)
 	return strutils::compare_nocase(ext, _T(".xls")) == 0 ||
 		strutils::compare_nocase(ext, _T(".xlsx")) == 0 ||
 		strutils::compare_nocase(ext, _T(".xlsm")) == 0 ||
-		strutils::compare_nocase(ext, _T(".xlsb")) == 0;
+		strutils::compare_nocase(ext, _T(".xlsb")) == 0 ||
+		strutils::compare_nocase(ext, _T(".xla")) == 0 ||
+		strutils::compare_nocase(ext, _T(".xlam")) == 0 ||
+		strutils::compare_nocase(ext, _T(".xlt")) == 0 ||
+		strutils::compare_nocase(ext, _T(".xltx")) == 0 ||
+		strutils::compare_nocase(ext, _T(".xltm")) == 0;
+}
+
+static bool IsUE5CoreAssetPath(const String& filteredText)
+{
+	const String ext = paths::FindExtension(filteredText);
+	if (strutils::compare_nocase(ext, _T(".exp")) == 0)
+	{
+		if (filteredText.empty() || paths::IsURLorCLSID(filteredText) || paths::IsNullDeviceName(filteredText))
+			return false;
+
+		// Plain .exp files are commonly linker export files. Only claim them
+		// automatically when a same-stem UE package/payload sidecar is nearby.
+		const String stem = paths::RemoveExtension(filteredText);
+		static const tchar_t* SidecarExtensions[] = { _T(".uasset"), _T(".umap"), _T(".uexp"), _T(".ubulk"), _T(".uptnl") };
+		for (const tchar_t* sidecarExt : SidecarExtensions)
+		{
+			if (paths::DoesPathExist(stem + sidecarExt) == paths::IS_EXISTING_FILE)
+				return true;
+		}
+		return false;
+	}
+
+	return strutils::compare_nocase(ext, _T(".uasset")) == 0 ||
+		strutils::compare_nocase(ext, _T(".umap")) == 0 ||
+		strutils::compare_nocase(ext, _T(".pak")) == 0 ||
+		strutils::compare_nocase(ext, _T(".ucas")) == 0 ||
+		strutils::compare_nocase(ext, _T(".utoc")) == 0 ||
+		strutils::compare_nocase(ext, _T(".uexp")) == 0;
+}
+
+static const wchar_t* GetFastInternalFolderPluginName(const String& filteredText)
+{
+	if (IsExcelWorkbookPath(filteredText))
+		return L"CompareExcelSheetsFast";
+	if (IsUE5CoreAssetPath(filteredText))
+		return L"CompareUE5Assets";
+	return nullptr;
 }
 
 static bool IsExcelPluginLogEnabled()
@@ -1107,9 +1149,10 @@ void CScriptsOfThread::ReloadAllScripts()
 
 PluginInfo *CScriptsOfThread::GetAutomaticPluginByFilter(const wchar_t *transformationEvent, const String& filteredText)
 {
+	const wchar_t* fastInternalPluginName = GetFastInternalFolderPluginName(filteredText);
 	if (!m_bPluginsFullyLoaded &&
 		wcscmp(transformationEvent, L"FILE_FOLDER_PACK_UNPACK") == 0 &&
-		IsExcelWorkbookPath(filteredText))
+		fastInternalPluginName != nullptr)
 	{
 		if (m_aPluginsByEvent.empty())
 		{
@@ -1118,7 +1161,7 @@ PluginInfo *CScriptsOfThread::GetAutomaticPluginByFilter(const wchar_t *transfor
 			if (IsExcelPluginLogEnabled())
 			{
 				RootLogger::Info(strutils::format(
-					_T("[ExcelPlugin] internal-only plugin fast-load elapsed=%lldms file=\"%s\""),
+					_T("[Plugin] internal-only plugin fast-load elapsed=%lldms file=\"%s\""),
 					ElapsedMilliseconds(start),
 					filteredText.c_str()));
 			}
@@ -1129,7 +1172,7 @@ PluginInfo *CScriptsOfThread::GetAutomaticPluginByFilter(const wchar_t *transfor
 			for (size_t step = 0; step < piFileScriptArray->size(); step++)
 			{
 				const PluginInfoPtr& plugin = piFileScriptArray->at(step);
-				if (plugin->m_name != _T("CompareExcelSheetsFast"))
+				if (plugin->m_name != fastInternalPluginName)
 					continue;
 				if (!plugin->m_bAutomatic || plugin->m_disabled)
 					continue;
@@ -1147,6 +1190,8 @@ PluginInfo *CScriptsOfThread::GetAutomaticPluginByFilter(const wchar_t *transfor
 		if (!plugin->m_bAutomatic || plugin->m_disabled)
 			continue;
 		if (!plugin->TestAgainstRegList(filteredText))
+			continue;
+		if (plugin->m_name == L"CompareUE5Assets" && !IsUE5CoreAssetPath(filteredText))
 			continue;
 		return plugin.get();
 	}

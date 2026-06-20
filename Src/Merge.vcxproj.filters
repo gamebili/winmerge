@@ -570,6 +570,9 @@
     <ClCompile Include="InternalPlugins.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="libUE5Core\UE5Core.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="PropMessageBoxes.cpp">
       <Filter>MFCGui\PropertyPages\Source Files</Filter>
     </ClCompile>
@@ -1491,6 +1494,9 @@
       <Filter>MFCGui\PropertyPages\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="InternalPlugins.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="libUE5Core\UE5Core.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="EditPluginDlg.h">
