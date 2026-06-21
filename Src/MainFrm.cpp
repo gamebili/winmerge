@@ -893,6 +893,83 @@ static bool ShouldPreferAutomaticFolderUnpacker(const PathContext& paths, UINT n
 	});
 }
 
+static bool IsLuaScriptPath(const String& path)
+{
+	if (path.empty() || paths::IsURLorCLSID(path) || paths::IsNullDeviceName(path))
+		return false;
+	return strutils::makelower(paths::FindExtension(path)) == _T(".lua");
+}
+
+// True if the file contains a line beginning with "-----Json", the marker the
+// config exporter appends to generated Lua tables. Scanned as raw bytes so the
+// file encoding is irrelevant; stops at the first match.
+static bool FileHasLuaTableMarker(const String& path)
+{
+	if (paths::DoesPathExist(path) != paths::IS_EXISTING_FILE)
+		return false;
+	FILE* fp = nullptr;
+	if (_tfopen_s(&fp, path.c_str(), _T("rb")) != 0 || fp == nullptr)
+		return false;
+	static const char kMarker[] = "-----Json";
+	const size_t markerLen = sizeof(kMarker) - 1;
+	char buffer[65536];
+	std::string lineHead;   // first markerLen bytes of the current line
+	bool atLineStart = true; // start-of-file counts as a line start
+	bool found = false;
+	size_t read;
+	while (!found && (read = fread(buffer, 1, sizeof(buffer), fp)) > 0)
+	{
+		for (size_t i = 0; i < read; ++i)
+		{
+			const char ch = buffer[i];
+			if (atLineStart && lineHead.size() < markerLen)
+			{
+				lineHead.push_back(ch);
+				if (lineHead.size() == markerLen)
+				{
+					if (memcmp(lineHead.data(), kMarker, markerLen) == 0)
+					{
+						found = true;
+						break;
+					}
+					atLineStart = false; // this line is not the marker; skip rest
+				}
+			}
+			if (ch == '\n' || ch == '\r')
+			{
+				atLineStart = true;
+				lineHead.clear();
+			}
+		}
+	}
+	fclose(fp);
+	return found;
+}
+
+// Lua config files in FightLua/config are generated tables that end with a
+// "-----Json" marker. When both sides of a comparison are such .lua files we run
+// them through the CompareLuaTable unpacker, which executes each file and emits
+// CSV so the returned tables diff as data instead of source text.
+static bool ShouldUseLuaTableUnpacker(const std::vector<String>& paths, UINT nID, const PackingInfo* infoUnpacker)
+{
+	if (static_cast<int>(nID) > 0 || !GetOptionsMgr()->GetBool(OPT_PLUGINS_ENABLED))
+		return false;
+	// Override only the empty or "<Automatic>" pipeline; a specific unpacker the
+	// user (or a remembered setting) chose must win. CompareLuaTable is not an
+	// automatic plugin, so "<Automatic>" would otherwise never select it.
+	if (infoUnpacker)
+	{
+		const String& pipeline = infoUnpacker->GetPluginPipeline();
+		if (!pipeline.empty() && pipeline != _T("<Automatic>"))
+			return false;
+	}
+	if (paths.size() < 2)
+		return false;
+	if (!std::all_of(paths.begin(), paths.end(), IsLuaScriptPath))
+		return false;
+	return std::any_of(paths.begin(), paths.end(), FileHasLuaTableMarker);
+}
+
 bool CMainFrame::ShowAutoMergeDoc(UINT nID, IDirDoc * pDirDoc,
 	int nFiles, const FileLocation ifileloc[],
 	const fileopenflags_t dwFlags[], const String strDesc[], const String& sReportFile /*= _T("")*/,
@@ -901,6 +978,18 @@ bool CMainFrame::ShowAutoMergeDoc(UINT nID, IDirDoc * pDirDoc,
 {
 	if (sReportFile.empty() && CompareFilesIfFilesAreLarge(pDirDoc, nFiles, ifileloc))
 		return false;
+
+	// When every pane is a .lua file and at least one carries the "-----Json"
+	// marker, force the CompareLuaTable unpacker so the executed config tables are
+	// compared as CSV. Done here, the shared auto-open funnel, so it also covers
+	// folder-compare drill-down and the command-line/DoFileOpen paths uniformly.
+	std::vector<String> luaPaths(nFiles);
+	for (int pane = 0; pane < nFiles; ++pane)
+		luaPaths[pane] = ifileloc[pane].filepath;
+	const String luaTablePipeline(_T("CompareLuaTable"));
+	PackingInfo luaTableUnpacker(luaTablePipeline);
+	if (ShouldUseLuaTableUnpacker(luaPaths, nID, infoUnpacker))
+		infoUnpacker = &luaTableUnpacker;
 
 	String unpackedFileExtension;
 	if ((infoUnpacker || FileTransform::AutoUnpacking) && GetOptionsMgr()->GetBool(OPT_PLUGINS_ENABLED))

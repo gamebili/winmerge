@@ -62,6 +62,17 @@
       <command>internal:ue5core:unpack-folder</command>
     </unpack-folder>
   </plugin>
+  <plugin name="CompareLuaTable">
+    <event value="FILE_PACK_UNPACK" />
+    <description value="Lua config table to CSV (lua54).&#xD;&#xA;Executes Lua config files and compares the returned tables as CSV." />
+    <file-filters value="\.lua$" />
+    <is-automatic value="false" />
+    <unpacked-file-extension value=".csv" />
+    <extended-properties value="ProcessType=Content Extraction;FileType=Lua;MenuCaption=Lua Table (CSV)" />
+    <unpack-file>
+      <command>internal:luatable:unpack-file</command>
+    </unpack-file>
+  </plugin>
   <plugin name="PrettifyHTML">
     <event value="FILE_PACK_UNPACK" />
     <description value="HTML Prettier (tidy-html5).&#xD;&#xA;Arguments: tidy command line options." />
