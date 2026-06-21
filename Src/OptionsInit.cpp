@@ -133,6 +133,7 @@ void Init(COptionsMgr *pOptions)
 
 	pOptions->InitOption(OPT_CLOSE_WITH_ESC, 3, 0, 3);
 	pOptions->InitOption(OPT_CLOSE_WITH_OK, false);
+	pOptions->InitOption(OPT_AUTO_UPDATE_CHECK, true);
 	pOptions->InitOption(OPT_IGNORE_SMALL_FILETIME, false);
 	pOptions->InitOption(OPT_ASK_MULTIWINDOW_CLOSE, false);
 	pOptions->InitOption(OPT_PRESERVE_FILETIMES, false);

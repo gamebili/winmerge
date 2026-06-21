@@ -106,6 +106,7 @@ inline const String OPT_MERGE_MODE {_T("Settings/MergingMode"s)};
 inline const String OPT_CLOSE_WITH_ESC {_T("Settings/CloseWithEsc"s)};
 inline const String OPT_CLOSE_WITH_OK {_T("Settings/CloseWithOK"s)};
 inline const String OPT_VERIFY_OPEN_PATHS {_T("Settings/VerifyOpenPaths"s)};
+inline const String OPT_AUTO_UPDATE_CHECK {_T("Settings/AutoUpdateCheck"s)};
 inline const String OPT_AUTO_COMPLETE_SOURCE {_T("Settings/AutoCompleteSource"s)};
 inline const String OPT_IGNORE_SMALL_FILETIME {_T("Settings/IgnoreSmallFileTime"s)};
 inline const String OPT_ASK_MULTIWINDOW_CLOSE {_T("Settings/AskClosingMultipleWindows"s)};

@@ -430,6 +430,8 @@ protected:
 	afx_msg void OnFileOpenProject();
 	afx_msg LRESULT OnCopyData(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT OnUser1(WPARAM wParam, LPARAM lParam);
+	afx_msg void OnHelpCheckForUpdates();
+	afx_msg LRESULT OnUpdateCheckResult(WPARAM wParam, LPARAM lParam);
 	afx_msg void OnWindowCloseAll();
 	afx_msg void OnUpdateWindowCloseAll(CCmdUI* pCmdUI);
 	afx_msg void OnSaveProject();

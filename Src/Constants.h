@@ -11,6 +11,12 @@
 /** @brief URL for hyperlink in About-dialog. */
 inline const tchar_t WinMergeURL[] = _T("https://winmerge.org/");
 
+/** @brief Releases page opened when an update is available. */
+inline const tchar_t UpdatePageURL[] = _T("https://github.com/gamebili/winmerge/releases");
+
+/** @brief GitHub API endpoint returning the latest published release. */
+inline const tchar_t UpdateApiURL[] = _T("https://api.github.com/repos/gamebili/winmerge/releases/latest");
+
 /**
  * @brief URL to help index in internet.
  * We use internet help when local help file is not found (not installed).

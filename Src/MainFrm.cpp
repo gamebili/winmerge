@@ -21,6 +21,7 @@
 #endif
 #include "ScopeExit.h"
 #include "Constants.h"
+#include "UpdateCheck.h"
 #include "Merge.h"
 #include "FileFilterHelper.h"
 #include "UnicodeString.h"
@@ -264,6 +265,8 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWnd)
 	ON_WM_DESTROY()
 	ON_MESSAGE(WM_COPYDATA, OnCopyData)
 	ON_MESSAGE(WM_USER+1, OnUser1)
+	ON_COMMAND(ID_HELP_CHECKFORUPDATES, OnHelpCheckForUpdates)
+	ON_MESSAGE(UpdateCheck::WM_APP_UPDATECHECK_RESULT, OnUpdateCheckResult)
 	ON_WM_ACTIVATEAPP()
 	ON_WM_NCCALCSIZE()
 	ON_WM_SIZE()
@@ -528,6 +531,9 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		ShowOutputPane(true);
 
 	UpdateSystemMenu();
+
+	if (GetOptionsMgr()->GetBool(OPT_AUTO_UPDATE_CHECK))
+		UpdateCheck::StartAsyncCheck(m_hWnd, false);
 
 	return 0;
 }
@@ -3293,6 +3299,43 @@ void CMainFrame::OnHelpReleasenotes()
 void CMainFrame::OnHelpTranslations()
 {
 	shell::Open(TranslationsUrl);
+}
+
+/**
+ * @brief Manually check the fork's GitHub releases for a newer version.
+ */
+void CMainFrame::OnHelpCheckForUpdates()
+{
+	UpdateCheck::StartAsyncCheck(m_hWnd, true);
+}
+
+/**
+ * @brief Handle the result of an asynchronous update check.
+ * Automatic checks stay silent unless a newer version is found; manual checks
+ * also report "up to date" and failures.
+ */
+LRESULT CMainFrame::OnUpdateCheckResult(WPARAM wParam, LPARAM lParam)
+{
+	const bool manual = (wParam != 0);
+	std::unique_ptr<String> result(reinterpret_cast<String*>(lParam));
+	if (!result)
+	{
+		if (manual)
+			AfxMessageBox(_("Checking for updates failed. Please check your network connection.").c_str(), MB_ICONWARNING);
+		return 0;
+	}
+	if (result->empty())
+	{
+		if (manual)
+			AfxMessageBox(_("You are using the latest version of WinMerge.").c_str(), MB_ICONINFORMATION);
+		return 0;
+	}
+	const String msg = strutils::format_string1(
+		_("A new version of WinMerge is available.\n\nLatest version: %1\n\nOpen the download page?"),
+		*result);
+	if (AfxMessageBox(msg.c_str(), MB_YESNO | MB_ICONINFORMATION) == IDYES)
+		shell::Open(UpdatePageURL);
+	return 0;
 }
 
 /**

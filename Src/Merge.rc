@@ -415,6 +415,7 @@ BEGIN
         MENUITEM "C&onfiguration",              ID_HELP_GETCONFIG
         MENUITEM SEPARATOR
         MENUITEM "&GNU General Public License", ID_HELP_GNULICENSE
+        MENUITEM "Check for &Updates...",       ID_HELP_CHECKFORUPDATES
         MENUITEM "&About WinMerge...",          ID_APP_ABOUT
     END
 END
@@ -592,6 +593,7 @@ BEGIN
         MENUITEM "C&onfiguration",              ID_HELP_GETCONFIG
         MENUITEM SEPARATOR
         MENUITEM "&GNU General Public License", ID_HELP_GNULICENSE
+        MENUITEM "Check for &Updates...",       ID_HELP_CHECKFORUPDATES
         MENUITEM "&About WinMerge...",          ID_APP_ABOUT
     END
 END
@@ -929,6 +931,7 @@ BEGIN
         MENUITEM "C&onfiguration",              ID_HELP_GETCONFIG
         MENUITEM SEPARATOR
         MENUITEM "&GNU General Public License", ID_HELP_GNULICENSE
+        MENUITEM "Check for &Updates...",       ID_HELP_CHECKFORUPDATES
         MENUITEM "&About WinMerge...",          ID_APP_ABOUT
     END
 END
