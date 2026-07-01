@@ -1,3 +1,9 @@
+@rem Clear NoDefaultCurrentDirectoryInExePath for this build session. When it is
+@rem set in the environment, cmd refuses to resolve batch files by bare name from
+@rem the current directory, so "call SetVersion.cmd" below is skipped and Version.h
+@rem ends up with unexpanded %MAJOR% placeholders (RC2104). Child scripts inherit
+@rem this cleared value.
+set "NoDefaultCurrentDirectoryInExePath="
 cd /d "%~dp0"
 
 call SetVersion.cmd
