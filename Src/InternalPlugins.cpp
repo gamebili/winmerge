@@ -277,7 +277,7 @@ debug.sethook(function()
   hookCount = hookCount + 1
   if hookCount > 2000 then error("lua2csv: instruction limit exceeded") end
 end, "", 1000000)
-local ok, ret = pcall(chunk)
+local ok, ret, retMd5, retSheetMd5 = pcall(chunk)
 debug.sethook()
 if not ok or type(ret) ~= "table" then passthrough() end
 
@@ -543,6 +543,16 @@ local emitOk = pcall(function()
       end
       outf:write(table.concat(cells, ",") .. "\n")
     end
+  end
+
+  -- Append the config's file-level checksums (the 2nd/3rd return values) as
+  -- trailing rows so a source-workbook change is visible even when the row
+  -- data is otherwise identical.
+  if retMd5 ~= nil then
+    outf:write("md5," .. csv_escape(serialize(retMd5)) .. "\n")
+  end
+  if retSheetMd5 ~= nil then
+    outf:write("sheet_md5," .. csv_escape(serialize(retSheetMd5)) .. "\n")
   end
   outf:close()
 end)
